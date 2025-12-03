@@ -36,12 +36,8 @@ Agent X: Flood
 * Flood Menu
 * Menu CS
 
-## Extra
-
-
-
 ## Credit's
 
-SuperRodrigo0: Lobby Map
-Blocky.cmd: Pause Menu
-Erik: Developer
+* SuperRodrigo0: Lobby Map
+* Blocky.cmd: Pause Menu
+* Erik: Developer
