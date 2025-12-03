@@ -3,6 +3,15 @@
 ## This mod is a continuation of Flood Extreme, what a coincidence no?
 
 Thanks to Erik for his help, and to the testers for balancing the mod, what would I do wihtout you?
+This flood uses the code for flood extreme, and the one for flood extreme uses the code for flood nightmare+
+
+## Credits
+
+zPancho!: Flood DEMON
+Erik: Flood Extreme
+DT Ryan: Flood Extreme
+birdekek: Flood Expanded
+Agent X: Flood
 
 ## Testers
 
@@ -26,3 +35,13 @@ Thanks to Erik for his help, and to the testers for balancing the mod, what woul
 * Coop Settings
 * Flood Menu
 * Menu CS
+
+## Extra
+
+
+
+## Credit's
+
+SuperRodrigo0: Lobby Map
+Blocky.cmd: Pause Menu
+Erik: Developer
