@@ -2,8 +2,8 @@
 
 ## This mod is a continuation of Flood Extreme, what a coincidence no?
 
-Thanks to Erik for his help, and to the testers for balancing the mod, what would I do wihtout you?
-This flood uses the code for flood extreme, and the one for flood extreme uses the code for flood nightmare+
+Thanks to Erik for his help, and to the testers for balancing the mod. What would I do without you?
+This flood mod uses code from Flood Extreme and a little bit from Flood - (please don't ask).
 
 ## Credits
 
