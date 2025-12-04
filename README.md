@@ -7,11 +7,17 @@ This flood uses the code for flood extreme, and the one for flood extreme uses t
 
 ## Credits
 
-zPancho!: Flood DEMON
-Erik: Flood Extreme
-DT Ryan: Flood Extreme
-birdekek: Flood Expanded
-Agent X: Flood
+* zPancho!: Flood DEMON
+* Erik: Flood Extreme
+* DT Ryan: Flood Extreme
+* birdekek: Flood Expanded
+* Agent X: Flood
+
+## Thanks
+
+* SuperRodrigo0: Lobby Map
+* Blocky.cmd: Pause Menu
+* Erik: Developer
 
 ## Testers
 
@@ -35,9 +41,3 @@ Agent X: Flood
 * Coop Settings
 * Flood Menu
 * Menu CS
-
-## Credit's
-
-* SuperRodrigo0: Lobby Map
-* Blocky.cmd: Pause Menu
-* Erik: Developer
