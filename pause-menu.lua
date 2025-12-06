@@ -287,18 +287,18 @@ local function hud_render()
     if network_is_server() or network_is_moderator() then
         local specialOptionsExist = true
         for _, option in ipairs(pauseMenuLevelOptions) do
-            if option.name == "Start Round"
-            or option.name == "Restart Round"
-            or option.name == "Stop Round" then
+            if option.name == "Round Start"
+            or option.name == "Round Reset"
+            or option.name == "Round End" then
                 specialOptionsExist = false
                 break
             end
         end
         if specialOptionsExist then
-            table.insert(pauseMenuLevelOptions, {name = "Start Round" , func = start_var})
-            table.insert(pauseMenuLevelOptions, {name = "Restart Round", func = reset_var})
-            table.insert(pauseMenuLevelOptions, {name = "Skip Round" , func = skip_var})
-            table.insert(pauseMenuLevelOptions, {name = "Stop Round" , func = stop_var})
+            table.insert(pauseMenuLevelOptions, {name = "Round Start", func = start_var})
+            table.insert(pauseMenuLevelOptions, {name = "Round Reset", func = reset_var})
+            table.insert(pauseMenuLevelOptions, {name = "Round Skip" , func = skip_var})
+            table.insert(pauseMenuLevelOptions, {name = "Round End"  , func = stop_var})
         end
     end
 
@@ -340,7 +340,7 @@ local function hud_render()
     local screenWidth = djui_hud_get_screen_width()
     local optionPosY = screenHeight * 0.55
 	
-	djui_hud_set_color(0, 0, 25, 128)
+	djui_hud_set_color(303, 0, 33, 84)
     djui_hud_render_rect(0, 0, screenWidth + 20, screenHeight)
     djui_hud_set_color(255, 255, 255, 255)
 
@@ -393,3 +393,4 @@ real_hook_event(HOOK_ON_HUD_RENDER, hud_render)
 real_hook_event(HOOK_BEFORE_MARIO_UPDATE, before_mario_update)
 real_hook_event(HOOK_ON_WARP, var_close)
 real_hook_event(HOOK_ON_LEVEL_INIT, function () restartLevelArea = gNetworkPlayers[0].currAreaIndex var_close() end)
+
