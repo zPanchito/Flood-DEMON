@@ -3,7 +3,6 @@
 
 -- Music Special --
 smlua_audio_utils_replace_sequence(15, 0x25,   100,    "lobby1")
-smlua_audio_utils_replace_sequence(16, 0x25,   100,    "lobby2")
 
 smlua_audio_utils_replace_sequence(25,   0x25, 75,     "castle - grounds")
 smlua_audio_utils_replace_sequence(26,     37, 75,     "bob")
@@ -29,20 +28,12 @@ smlua_audio_utils_replace_sequence(51,   0x1A, 75,     "ttc")
 smlua_audio_utils_replace_sequence(40,    0x25, 75,    "ctt")
 smlua_audio_utils_replace_sequence(41,    0x25, 75,    "rr")
 
--- Lobby Music (Maisk mainly cooked this up)
-function random()
-if game == GAME_VANILLA and gNetworkPlayers[0].currLevelNum == LEVEL_ZEROLIFE then
-        local randomnumb = math.random(2)
-        if randomnumb == 1 then
-            set_background_music(0, 15, 75)
-        elseif randomnumb == 2 then
-            set_background_music(0, 16, 75)
-        end
-    end
-end
 
 local function demon_music()
 
+if gNetworkPlayers[0].currLevelNum == LEVEL_ZEROLIFE then
+    set_background_music(0, 15, 60)
+end
 if gNetworkPlayers[0].currLevelNum == LEVEL_CASTLE_GROUNDS then
     set_background_music(0, 25, 60)
 end
@@ -113,5 +104,4 @@ if gNetworkPlayers[0].currLevelNum == LEVEL_BITFS then
 		end
 end 
 
-hook_event(HOOK_ON_LEVEL_INIT, random)
 hook_event(HOOK_ON_WARP, demon_music)
