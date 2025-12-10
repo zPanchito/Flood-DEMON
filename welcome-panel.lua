@@ -13,7 +13,6 @@ local rotatingTextOptions = {
     "Will there be a sequel to Flood Demon?", -- "Dry box holds a secret, ask Erik"
     "!Flood ???H??3iL??!",
 	"Ahhh!, very difficult!!!",
-	"!!!This flood was going to compatible with the top 1 romhacking site!!!",
 	"Erik and his flood extreme make a good pair",
 	"Get rid of the flood+",
 	"Uziel likes TV Woman!!",
@@ -21,7 +20,7 @@ local rotatingTextOptions = {
 	"Coming soon: Flood De-He",
 	"Will they release the end update?",
 	"Why am I still working with this flood?? Sincerely, zPancho!",
-	"Departure date: December 25",
+	"Departure date: ????????",
 	"Code of random text By Erik"
 }
 
