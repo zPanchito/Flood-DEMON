@@ -1,5 +1,8 @@
+gGlobalSyncTable.enviromentTint = false
 
--- Colored Nametag's
+-- name: \\#ff0\\Co\\#639bff\\lo\\#f00\\red \\#0f0\\Name\\#666\\tags\\#fff\\ v1.1
+-- description: Make your nametags match your name's color code.\n\nMade by \\#333\\Profe\\#ff0\\Javix
+
 
 local hookEvent = hook_event
 local measure = djui_hud_measure_text
@@ -307,12 +310,11 @@ _G.coloredNametagsFuncs = {
     set_nametag_text = set_nametag_text,
     set_nametag_world_pos = set_nametag_world_pos
 }
-
-gGlobalSyncTable.enviromentTint = false
+--#endregion -----------------------------------------------------------------------------------------------------------------------------------
 
 -- Slides bye bye (idk)
 local function slides(m)
-    if gNetworkPlayers[0].currLevelNum == LEVEL_PSS or LEVEL_CCM then
+    if gNetworkPlayers[0].currLevelNum == LEVEL_CCM then
         if m.area.terrainType == TERRAIN_SLIDE then
             m.area.terrainType = TERRAIN_STONE
         end
