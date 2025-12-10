@@ -28,10 +28,15 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 
 ## Chat Comands
 
-* /flood start
-* /flood speed
-* /flood mods
-* /flood mode (default, random, voting)
+> `/flood start`
+
+> `/flood speed`
+ 
+> `/flood mods`
+
+> `/flood mode [default, random, voting]`
+
+* Modified by JCM-Corlg
 
 ## Pause Menu
 
