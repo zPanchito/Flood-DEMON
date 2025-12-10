@@ -23,8 +23,8 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 
 * JCM-Corlg
 * Goku
-* Cent
-* Calebsito
+* Cent24
+* CalebSM64_CR!
 
 ## Chat Comands
 
