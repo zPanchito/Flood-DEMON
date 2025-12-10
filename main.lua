@@ -16,7 +16,7 @@ ROUND_COOLDOWN         = 21 * 50 -- 11 seconds, the 11 should only be shown on 1
 SPECTATOR_MODE_NORMAL  = 0
 SPECTATOR_MODE_FOLLOW  = 1
 
-TEX_HITBOX = get_texture_info("hitbox")
+TEX_GEO_TAG = get_texture_info("hitbox")
 
 local globalTimer = 0
 local listedSurvivors = false
@@ -38,7 +38,6 @@ gGlobalSyncTable.popups = true
 gGlobalSyncTable.isPermitted = true
 gGlobalSyncTable.modif_coinless = false
 gGlobalSyncTable.modif_trollface = false
-gGlobalSyncTable.lobbyPvp = true
 gGlobalSyncTable.modif_daredevil = false
 gGlobalSyncTable.modif_slide_jump = false
 gGlobalSyncTable.modif_pvp = false
@@ -438,7 +437,7 @@ local function mario_update(m)
         set_mario_action(m, ACT_FREEFALL, 0)
     end
 
-    if gNetworkPlayers[0].currLevelNum == LEVEL_CTT then
+    if gNetworkPlayers[0].currLevelNum == LEVEL_SA then
         m.peakHeight = m.pos.y
 
         local star = obj_get_first_with_behavior_id(id_bhvFinalStar)
@@ -471,7 +470,7 @@ local function mario_update(m)
 
         gPlayerSyncTable[0].finished = true
         if gGlobalSyncTable.popups == true then
-            djui_popup_create_global(network_get_player_text_color_string(0) .. gNetworkPlayers[0].name .. "\\#80000\\ Timer: \\#bb0000\\" .. string.format("%.3f",gPlayerSyncTable[0].time / 30), 1)
+            djui_popup_create_global(network_get_player_text_color_string(0) .. gNetworkPlayers[0].name .. "\\#dcdcdc\\ has finished in\n Time: \\#00ff00\\" .. string.format("%.3f", gPlayerSyncTable[0].time / 30), 2)
         end
         
         local string = ""
@@ -534,92 +533,15 @@ local function mario_update(m)
             gPlayerSyncTable[0].time = gPlayerSyncTable[0].time + 1
         end
     end
-end
+end 
 
+-- carajo creo que fue mala idea 
 local function on_hud_render()
     local water = obj_get_first_with_behavior_id(id_bhvWater)
-    if gNetworkPlayers[0].currLevelNum == gLevels[gGlobalSyncTable.level].level and water ~= nil then -- LEVEL 52 + 36 VOTING ERROR
+    if gNetworkPlayers[0].currLevelNum == gLevels[gGlobalSyncTable.level].level and water ~= nil then
         djui_hud_set_resolution(RESOLUTION_DJUI)
         if gLakituState.pos.y < gGlobalSyncTable.waterLevel + 2 then
             switch(water.oAnimState, {
-                [FLOOD_WATER] = function()
-                    djui_hud_set_adjusted_color(0, 20, 200, 175)
-                end,
-                [FLOOD_LAVA] = function()
-                    djui_hud_set_adjusted_color(200, 0, 0, 175)
-                end,
-                [FLOOD_SAND] = function()
-                    djui_hud_set_adjusted_color(254, 193, 121, 230)
-                end,
-                [FLOOD_MUD] = function()
-                    djui_hud_set_adjusted_color(128, 71, 34, 240)
-                end,
-                [FLOOD_SNOW] = function()
-                    djui_hud_set_adjusted_color(255, 255, 255, 220)
-                end,
-                [FLOOD_WASTE] = function()
-                    djui_hud_set_adjusted_color(74, 123, 0, 220)
-                end,
-                [FLOOD_DESERT] = function()
-                    djui_hud_set_adjusted_color(254, 193, 121, 230)
-                end,
-                [FLOOD_ACID] = function()
-                    djui_hud_set_adjusted_color(0, 142, 36, 190)
-                end,
-                [FLOOD_POISON] = function()
-                    djui_hud_set_adjusted_color(174, 0, 255, 190)
-                end,
-                [FLOOD_SUNSET] = function()
-                    djui_hud_set_adjusted_color(235, 164, 0, 200)
-                end,
-                [FLOOD_FROSTBITE] = function()
-                    djui_hud_set_adjusted_color(126, 197, 249, 200)
-                end,
-                [FLOOD_CLOUDS] = function()
-                    djui_hud_set_adjusted_color(255, 255, 255, 200)
-                end,
-                [FLOOD_RAINBOW] = function()
-                    djui_hud_set_adjusted_color(244, 140, 253, 230)
-                end,
-                [FLOOD_DARKNESS] = function()
-                    djui_hud_set_adjusted_color(0, 0, 0, 200)
-                end,
-                [FLOOD_MAGMA] = function()
-                    djui_hud_set_adjusted_color(237, 0, 0, 220)
-                end,
-                [FLOOD_SULFUR] = function()
-                    djui_hud_set_adjusted_color(0, 20, 167, 220)
-                end,
-                [FLOOD_COTTON] = function()
-                    djui_hud_set_adjusted_color(255, 181, 225, 220)
-                end,
-                [FLOOD_MOLTEN] = function()
-                    djui_hud_set_adjusted_color(225, 106, 19, 220)
-                end,
-                [FLOOD_OIL] = function()
-                    djui_hud_set_adjusted_color(0, 0, 0, 200)
-                end,
-                [FLOOD_MATRIX] = function()
-                    djui_hud_set_adjusted_color(16, 71, 0, 200)
-                end,
-                [FLOOD_BUP] = function()
-                    djui_hud_set_adjusted_color(254, 193, 121, 200)
-                end,
-                [FLOOD_TIDE] = function()
-                    djui_hud_set_adjusted_color(15, 122, 211, 200)
-                end,
-                [FLOOD_DARKTIDE] = function()
-                    djui_hud_set_adjusted_color(15, 75, 124, 200)
-                end,
-                [FLOOD_VOLCANO] = function()
-                    djui_hud_set_adjusted_color(252, 30, 30, 200)
-                end,
-                [FLOOD_REDTIDE] = function()
-                    djui_hud_set_adjusted_color(211, 12, 35, 200)
-                end,
-                [FLOOD_OPTIC] = function()
-                    djui_hud_set_adjusted_color(146, 0, 132, 200)
-                end,
             })
             djui_hud_render_rect(0, 0, djui_hud_get_screen_width(), djui_hud_get_screen_height())
             set_lighting_dir(1,128)
@@ -654,7 +576,7 @@ local function on_hud_render()
             djui_hud_set_adjusted_color(255, 255, 255, 145)
             
             if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-                djui_hud_render_texture_interpolated(TEX_HITBOX, flagIconPrevPos.x - 8, flagIconPrevPos.y - 8, 1.15, 1.15, dX - 8, dY - 8, 1.15, 1.15)
+                djui_hud_render_texture_interpolated(TEX_GEO_TAG, flagIconPrevPos.x - 8, flagIconPrevPos.y - 8, 0.15, 0.15, dX - 8, dY - 8, 0.15, 0.15)
             end
 
             djui_hud_set_adjusted_color(255, 255, 255, 255)
@@ -774,7 +696,6 @@ local function on_speed_command(msg)
             return true
         end
     else
-        djui_chat_message_create("I'm sorry ")
         if gGlobalSyncTable.popups == true then
             djui_popup_create_global("Flood Speed was tried to be changed to " .. speed .. "x", 1)
         end
