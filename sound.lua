@@ -2,9 +2,8 @@
 -- Hello, with all due respect
 
 -- Music Special --
-smlua_audio_utils_replace_sequence(11,   0x25, 75,     "lobby1")
-smlua_audio_utils_replace_sequence(12,   0x1E, 75,     "lobby2") -- 0x1E --0x0C
-smlua_audio_utils_replace_sequence(13,   0x25, 75,     "lobby3")
+smlua_audio_utils_replace_sequence(11,     37, 75,     "lobby1")
+smlua_audio_utils_replace_sequence(12,     34, 75,     "lobby2")
 
 smlua_audio_utils_replace_sequence(25,   0x25, 75,     "castle - grounds")
 smlua_audio_utils_replace_sequence(26,     37, 75,     "bob")
@@ -13,10 +12,10 @@ smlua_audio_utils_replace_sequence(28,   0x25, 75,     "jrb")
 smlua_audio_utils_replace_sequence(16,   0x25, 60,     "ccm")
 smlua_audio_utils_replace_sequence(0x09, 0x25, 75,     "ccm-slide")
 smlua_audio_utils_replace_sequence(24,   0x25, 75,     "bbh")
-smlua_audio_utils_replace_sequence(30,     37, 65,     "pss")
+smlua_audio_utils_replace_sequence(30,     24, 65,     "slide-pss")
 smlua_audio_utils_replace_sequence(31,   0x25, 75,     "totwc")
 
-smlua_audio_utils_replace_sequence(32,   0x25, 75,     "hmc")
+smlua_audio_utils_replace_sequence(32,   0x25, 75,     "hmc-2")
 smlua_audio_utils_replace_sequence(33,   0x25, 75,     "lll")
 smlua_audio_utils_replace_sequence(34,   0x25, 75,     "ssl")
 smlua_audio_utils_replace_sequence(35,   0x18, 75,     "vcutm")
@@ -24,12 +23,14 @@ smlua_audio_utils_replace_sequence(55,   0x25, 75,     "vcutm")
 smlua_audio_utils_replace_sequence(36,   0x25, 75,     "cotmc")
 smlua_audio_utils_replace_sequence(37,   0x25, 75,     "ddd")
 smlua_audio_utils_replace_sequence(38,   0x1A, 75,     "wdw")
-smlua_audio_utils_replace_sequence(17,   0x25, 75,     "sl")
+smlua_audio_utils_replace_sequence(17,     37, 75,     "sl")
 smlua_audio_utils_replace_sequence(50,   0x25, 75,     "thi")
 smlua_audio_utils_replace_sequence(51,   0x1A, 75,     "ttc")
-
-smlua_audio_utils_replace_sequence(40,   0x25, 75,     "bits")
 smlua_audio_utils_replace_sequence(41,   0x25, 75,     "rr")
+
+smlua_audio_utils_replace_sequence(56,   0x25, 75,     "bitdw")
+smlua_audio_utils_replace_sequence(40,   0x25, 75,     "bits")
+smlua_audio_utils_replace_sequence(55,     26, 75,     "bitfs")
 
 local function demon_music()
 
@@ -97,24 +98,25 @@ if gNetworkPlayers[0].currLevelNum == LEVEL_BLACK_WDW then
     set_background_music(0, 38, 60)
 end	
 	
+if gNetworkPlayers[0].currLevelNum == LEVEL_BITDW then
+    set_background_music(0, 56, 60)
+end	
 if gNetworkPlayers[0].currLevelNum == LEVEL_BITS then
     set_background_music(0, 40, 60)
 end		
 if gNetworkPlayers[0].currLevelNum == LEVEL_BITFS then
-    set_background_music(0, 41, 60)
+    set_background_music(0, 55, 60)
 		end
 end 
 
 -- Lobby Music (Maisk mainly cooked this up)
 function random()
 if game == GAME_VANILLA and gNetworkPlayers[0].currLevelNum == LEVEL_ZEROLIFE then
-        local randomnumb = math.random(3)
+        local randomnumb = math.random(2)
         if randomnumb == 1 then
             set_background_music(0, 11, 75)
         elseif randomnumb == 2 then
             set_background_music(0, 12, 75)
-        elseif randomnumb == 3 then
-            set_background_music(0, 13, 75)
         end
     end
 end
