@@ -15,7 +15,7 @@ smlua_audio_utils_replace_sequence(24,   0x25, 75,     "bbh")
 smlua_audio_utils_replace_sequence(30,     24, 65,     "slide-pss")
 smlua_audio_utils_replace_sequence(31,   0x25, 75,     "totwc")
 
-smlua_audio_utils_replace_sequence(32,   0x25, 75,     "hmc-2")
+smlua_audio_utils_replace_sequence(32,   0x25, 75,     "hmc")
 smlua_audio_utils_replace_sequence(33,   0x25, 75,     "lll")
 smlua_audio_utils_replace_sequence(34,   0x25, 75,     "ssl")
 smlua_audio_utils_replace_sequence(35,   0x18, 75,     "vcutm")
@@ -156,3 +156,4 @@ end)
 hook_event(HOOK_ON_WARP, on_warp)
 hook_event(HOOK_ON_LEVEL_INIT, random)
 hook_event(HOOK_ON_WARP, demon_music)
+
