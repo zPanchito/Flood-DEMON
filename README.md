@@ -26,24 +26,12 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 * Cent24
 * CalebSM64_CR!
 
-## Chat Comands
-
-> `/flood start`
-
-> `/flood speed`
- 
-> `/flood mods`
-
-> `/flood mode [default, random, voting]`
-
-* Modified by JCM-Corlg
-
 ## Pause Menu
 
-* Round Start
-* Round Reset
-* Round Skip
-* Round End
-* Coop Settings
-* Flood Menu
-* Menu CS
+`Round Start`
+`Round Reset`
+`Round Skip`
+`/Round End`
+`Coop Settings`
+`/Flood Menu`
+`Menu CS`
