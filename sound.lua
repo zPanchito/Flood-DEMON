@@ -1,42 +1,53 @@
 -- hola con todo respeto
 -- Hello, with all due respect
 
--- Music Special --
+-- Lobby --
 smlua_audio_utils_replace_sequence(11,     37, 75,     "lobby1")
 smlua_audio_utils_replace_sequence(12,     34, 75,     "lobby2")
 
+-- Castle Main
 smlua_audio_utils_replace_sequence(25,   0x25, 75,     "castle - grounds")
 smlua_audio_utils_replace_sequence(26,     37, 75,     "bob")
 smlua_audio_utils_replace_sequence(27,   0x18, 75,     "wf")
 smlua_audio_utils_replace_sequence(28,   0x25, 75,     "jrb")
-smlua_audio_utils_replace_sequence(16,   0x25, 60,     "ccm")
-smlua_audio_utils_replace_sequence(0x09, 0x25, 75,     "ccm-slide")
-smlua_audio_utils_replace_sequence(24,   0x25, 75,     "bbh")
-smlua_audio_utils_replace_sequence(30,     24, 65,     "slide-pss")
-smlua_audio_utils_replace_sequence(31,   0x25, 75,     "totwc")
+smlua_audio_utils_replace_sequence(29,   0x25, 60,     "ccm")
+smlua_audio_utils_replace_sequence(30,   0x25, 75,     "ccm-slide")
+smlua_audio_utils_replace_sequence(31,   0x25, 75,     "bbh")
+smlua_audio_utils_replace_sequence(32,     24, 65,     "slide-pss")
+smlua_audio_utils_replace_sequence(33,   0x25, 75,     "totwc")
 
-smlua_audio_utils_replace_sequence(32,   0x25, 75,     "hmc")
-smlua_audio_utils_replace_sequence(33,   0x25, 75,     "lll")
-smlua_audio_utils_replace_sequence(34,   0x25, 75,     "ssl")
-smlua_audio_utils_replace_sequence(35,   0x18, 75,     "vcutm")
-smlua_audio_utils_replace_sequence(55,   0x25, 75,     "vcutm")
-smlua_audio_utils_replace_sequence(36,   0x25, 75,     "cotmc")
-smlua_audio_utils_replace_sequence(37,   0x25, 75,     "ddd")
-smlua_audio_utils_replace_sequence(38,   0x1A, 75,     "wdw")
-smlua_audio_utils_replace_sequence(17,     37, 75,     "sl")
-smlua_audio_utils_replace_sequence(50,   0x25, 75,     "thi")
-smlua_audio_utils_replace_sequence(51,   0x1A, 75,     "ttc")
-smlua_audio_utils_replace_sequence(41,   0x25, 75,     "rr")
+-- Castle Basement
+smlua_audio_utils_replace_sequence(34,   0x25, 75,     "hmc")
+smlua_audio_utils_replace_sequence(35,   0x25, 75,     "lll")
+smlua_audio_utils_replace_sequence(36,   0x25, 75,     "ssl")
+smlua_audio_utils_replace_sequence(37,   0x18, 75,     "vcutm")
+smlua_audio_utils_replace_sequence(38,   0x25, 75,     "cotmc")
+smlua_audio_utils_replace_sequence(49,   0x25, 75,     "ddd")
 
-smlua_audio_utils_replace_sequence(56,   0x25, 75,     "bitdw")
-smlua_audio_utils_replace_sequence(40,   0x25, 75,     "bits")
-smlua_audio_utils_replace_sequence(55,     26, 75,     "bitfs")
+-- Castle Upper
+smlua_audio_utils_replace_sequence(40,   0x1A, 75,     "wdw")
+smlua_audio_utils_replace_sequence(41,     37, 75,     "sl")
+smlua_audio_utils_replace_sequence(42,   0x25, 75,     "ttm")
+smlua_audio_utils_replace_sequence(43,   0x25, 75,     "thi")
+smlua_audio_utils_replace_sequence(44,     35, 75,     "ttc")
+smlua_audio_utils_replace_sequence(45,   0x2A, 75,     "rr")
+
+-- Bowser Levels
+smlua_audio_utils_replace_sequence(46,   0x25, 75,     "bitdw")
+smlua_audio_utils_replace_sequence(47,   0x25, 75,     "bits")
+smlua_audio_utils_replace_sequence(48,   0x25, 75,     "bitfs")
+
+-- Areas Levels
+smlua_audio_utils_replace_sequence(50,     42, 75,     "ssl-2")
+smlua_audio_utils_replace_sequence(51,   0x2A, 75,     "wdw-2")
+smlua_audio_utils_replace_sequence(52,   0x2A, 75,     "sl-2")
+smlua_audio_utils_replace_sequence(53,   0x25, 75,     "wdw-2")
+
+-- Music Second
+smlua_audio_utils_replace_sequence(60,   0x2A, 75,     "castle - grounds-2")
 
 local function demon_music()
 
-if gNetworkPlayers[0].currLevelNum == LEVEL_CASTLE_GROUNDS then
-    set_background_music(0, 25, 60)
-end
 if gNetworkPlayers[0].currLevelNum == LEVEL_BOB then
     set_background_music(0, 26, 60)
 end
@@ -46,80 +57,101 @@ end
 if gNetworkPlayers[0].currLevelNum == LEVEL_JRB then
     set_background_music(0, 28, 60)
 end
+if gNetworkPlayers[0].currLevelNum == LEVEL_CCM then
+    set_background_music(0, 29, 60)
+end
+if gNetworkPlayers[0].currLevelNum == LEVEL_CCM and gNetworkPlayers[0].currAreaIndex == 2 then
+    set_background_music(0, 30, 60)
+end	
 if gNetworkPlayers[0].currLevelNum == LEVEL_BBH then
-    set_background_music(0, 24, 60)
+    set_background_music(0, 31, 60)
 end
 if gNetworkPlayers[0].currLevelNum == LEVEL_PSS then
-    set_background_music(0, 30, 60)
-end
-if gNetworkPlayers[0].currLevelNum == LEVEL_TOTWC then
-    set_background_music(0, 31, 60)
-end	
-if gNetworkPlayers[0].currLevelNum == LEVEL_HMC then
     set_background_music(0, 32, 60)
 end
-if gNetworkPlayers[0].currLevelNum == LEVEL_COTMC then
-    set_background_music(0, 36, 60)
-end	
-if gNetworkPlayers[0].currLevelNum == LEVEL_LLL then
+if gNetworkPlayers[0].currLevelNum == LEVEL_TOTWC then
     set_background_music(0, 33, 60)
-end	
-if gNetworkPlayers[0].currLevelNum == LEVEL_SSL then
+end
+
+
+	
+if gNetworkPlayers[0].currLevelNum == LEVEL_HMC then
     set_background_music(0, 34, 60)
 end
-if gNetworkPlayers[0].currLevelNum == LEVEL_VCUTM then
+if gNetworkPlayers[0].currLevelNum == LEVEL_LLL then
     set_background_music(0, 35, 60)
+end	
+if gNetworkPlayers[0].currLevelNum == LEVEL_SSL then
+    set_background_music(0, 36, 60)
 end
-if gNetworkPlayers[0].currLevelNum == LEVEL_DDD then
-    set_background_music(0, 37, 60)
-end
-if gNetworkPlayers[0].currLevelNum == LEVEL_WDW then
-    set_background_music(0, 38, 60)
-end
-if gNetworkPlayers[0].currLevelNum == LEVEL_TTM then
-    set_background_music(0, 55, 60)
-end
-if gNetworkPlayers[0].currLevelNum == LEVEL_THI then
+if gNetworkPlayers[0].currLevelNum == LEVEL_SSL and gNetworkPlayers[0].currAreaIndex == 2 then
     set_background_music(0, 50, 60)
 end
-if gNetworkPlayers[0].currLevelNum == LEVEL_TTC then
-    set_background_music(0, 51, 60)
-end		
-if gNetworkPlayers[0].currLevelNum == LEVEL_RR then
-    set_background_music(0x09, 41, 60)
-end				
-if gNetworkPlayers[0].currLevelNum == LEVEL_SL then
-    set_background_music(0, 17, 60)
-end	
-if gNetworkPlayers[0].currLevelNum == LEVEL_CCM then
-    set_background_music(0, 16, 60)
-end			
-if gNetworkPlayers[0].currLevelNum == LEVEL_BLACK_WDW then
+if gNetworkPlayers[0].currLevelNum == LEVEL_VCUTM then
+    set_background_music(0, 37, 60)
+end
+if gNetworkPlayers[0].currLevelNum == LEVEL_COTMC then
     set_background_music(0, 38, 60)
 end	
-	
+if gNetworkPlayers[0].currLevelNum == LEVEL_DDD then
+    set_background_music(0, 49, 60)
+end
+
+
+if gNetworkPlayers[0].currLevelNum == LEVEL_WDW then
+    set_background_music(0, 40, 60)
+end
+if gNetworkPlayers[0].currLevelNum == LEVEL_WDW and gNetworkPlayers[0].currAreaIndex == 2 then
+    set_background_music(0, 40, 60)
+end
+if gNetworkPlayers[0].currLevelNum == LEVEL_SL then
+    set_background_music(0, 41, 60)
+end
+if gNetworkPlayers[0].currLevelNum == LEVEL_SL and gNetworkPlayers[0].currAreaIndex == 2 then
+    set_background_music(0, 52, 60)
+end	
+if gNetworkPlayers[0].currLevelNum == LEVEL_TTM then
+    set_background_music(0, 42, 60)
+end
+if gNetworkPlayers[0].currLevelNum == LEVEL_THI then
+    set_background_music(0, 43, 60)
+end
+if gNetworkPlayers[0].currLevelNum == LEVEL_TTC then
+    set_background_music(0, 44, 60)
+end		
+if gNetworkPlayers[0].currLevelNum == LEVEL_RR then
+    set_background_music(0, 45, 60)
+end				
+		
+
 if gNetworkPlayers[0].currLevelNum == LEVEL_BITDW then
-    set_background_music(0, 56, 60)
+    set_background_music(0, 46, 60)
 end	
 if gNetworkPlayers[0].currLevelNum == LEVEL_BITS then
-    set_background_music(0, 40, 60)
+    set_background_music(0, 47, 60)
 end		
 if gNetworkPlayers[0].currLevelNum == LEVEL_BITFS then
-    set_background_music(0, 55, 60)
-		end
-end 
+    set_background_music(0, 48, 60)
+end
 
+if gNetworkPlayers[0].currLevelNum == LEVEL_ZEROLIFE then
+       set_background_music(0, 11, 60)
+    end
+end
 -- Lobby Music (Maisk mainly cooked this up)
 function random()
-if game == GAME_VANILLA and gNetworkPlayers[0].currLevelNum == LEVEL_ZEROLIFE then
+if game == GAME_VANILLA and gNetworkPlayers[0].currLevelNum == LEVEL_CASTLE_GROUNDS then
         local randomnumb = math.random(2)
         if randomnumb == 1 then
-            set_background_music(0, 11, 75)
+            set_background_music(0, 25, 75)
         elseif randomnumb == 2 then
-            set_background_music(0, 12, 75)
+            set_background_music(0, 60, 75)
         end
     end
 end
+
+hook_event(HOOK_ON_LEVEL_INIT, random)
+hook_event(HOOK_ON_WARP, random)
 
 -- Audio system made by Cooliokid 956 (Great Kingdom Offical)
 -- Gotta put credit here because this sound system is actually amazing
@@ -154,6 +186,7 @@ end)
 -- and also, if you have 2 levels on 1 level area, you can't put 2 diferent songs in one same area, sorry.
 
 hook_event(HOOK_ON_WARP, on_warp)
-hook_event(HOOK_ON_LEVEL_INIT, random)
 hook_event(HOOK_ON_WARP, demon_music)
+hook_event(HOOK_ON_WARP, demon_music)
+
 
