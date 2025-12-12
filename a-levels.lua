@@ -30,9 +30,8 @@ FLOOD_OPTIC     = 25
 FLOOD_LEVEL_COUNT = 0
 FLOOD_BONUS_LEVELS = 0
 
-LEVEL_CTT       = level_register('level_ctt_entry',        COURSE_NONE, 'CTT',             'c',  28000, 0x08, 0x08, 0x08)
-LEVEL_ZEROLIFE  = level_register('level_zerolife_entry',   COURSE_NONE, 'Lobby',           'c',  28000, 0x08, 0x08, 0x08)
-LEVEL_BLACK_WDW = level_register('level_black_wdw_entry',  COURSE_NONE, 'Blind Night [1]', 'c',  28000, 0x08, 0x08, 0x08) 
+LEVEL_ZEROLIFE = level_register('level_zerolife_entry',   COURSE_NONE, 'Lobby',           'c',  28000, 0x08, 0x08, 0x08)
+LEVEL_CTT       = level_register('level_ctt_entry',        COURSE_NONE, 'CTT',             'c',  28000, 0x08, 0x08, 0x08) 
 
 GAME_VANILLA = 0
 game = GAME_VANILLA
@@ -70,6 +69,7 @@ local djui_popup_create = djui_popup_create
 
 -- Finally, a good gLevels src
 local function flood_load_vanilla_levels()
+    LEVEL_LOBBY = LEVEL_ZEROLIFE 
     game = GAME_VANILLA
     gLevels = {
 		{
@@ -97,7 +97,6 @@ local function flood_load_vanilla_levels()
             author = "zPancho!",
             type = FLOOD_POISON,
             sky = BACKGROUND_PURPLE_SKY,
-			painting = TEX_BOB_PAINTING,
             customStartPos = nil,
         },
         {
@@ -112,7 +111,6 @@ local function flood_load_vanilla_levels()
             sky = BACKGROUND_PURPLE_SKY,
 			noWater = true,
             customStartPos = nil,
-			painting = TEX_WF_PAINTING,
 			floodHeight = -1490
         },
         {
@@ -127,7 +125,6 @@ local function flood_load_vanilla_levels()
             sky = BACKGROUND_PURPLE_SKY,
 			noWater = true,
             customStartPos = nil,
-			painting = TEX_JRB_PAINTING,
             floodHeight = -2500
         },
         {
@@ -141,7 +138,6 @@ local function flood_load_vanilla_levels()
             type = FLOOD_POISON,
             sky = BACKGROUND_PURPLE_SKY,
             customStartPos = nil,
-			painting = TEX_CCM_PAINTING,
 			floodHeight = -6500
         },
         {
@@ -154,7 +150,6 @@ local function flood_load_vanilla_levels()
             author = "zPancho!",
             type = FLOOD_POISON,
             customStartPos = { x = -6498, y = -5836, z = -6937, a = 0x0000 },
-			painting = TEX_CCM_PAINTING,
 			floodHeight = -8791
         },
         {
@@ -168,7 +163,6 @@ local function flood_load_vanilla_levels()
             type = FLOOD_POISON,
 			sky = BACKGROUND_PURPLE_SKY,
             customStartPos = nil,
-			painting = TEX_BBH_PAINTING,
 		},
         {
             level = LEVEL_TOTWC,
@@ -192,18 +186,17 @@ local function flood_load_vanilla_levels()
             author = "zPancho!",
             type = FLOOD_POISON,
             customStartPos = { x =  -4763, y = -3057, z = -2985, a = -0x6000 },
-			painting = TEX_PSS_PAINTING,
         },
         {
             level = LEVEL_BITDW,
             codeName = "bitdw",
-            goalPos = { x =   6828,   y =   2867,   z =    -25,   a = -0x4000  },
-            containsbase = true,
-            speed = 2.1,
+            goalPos = { x =   -7684,   y =   422,   z =    2775,   a = -0x4000  },
+            speed = 1.1,
             area = 1,
             levelName = "Bowser in the heaven of suffering",
             author = "zPancho!",
             type = FLOOD_POISON,
+			floodScale = 0.7,
             sky = BACKGROUND_PURPLE_SKY,
             customStartPos = nil,
         },
@@ -447,20 +440,6 @@ local function flood_load_vanilla_levels()
 			sky = BACKGROUND_PURPLE_SKY,
             customStartPos = nil,
 			floodHeight = -7000
-		},
-		{
-            level = LEVEL_BLACK_WDW,
-            codeName = "black-wdw",
-            goalPos = { x =   17987,   y =   6723,   z =  -9413,   a =  0x2000  },
-            containsbase = true,
-            speed = 2,
-            area = 1,
-            author = "NormalX71",
-            type = FLOOD_OIL,
-			floodScale = 5.0,
-			levelName = "Blind Night",
-            customStartPos = nil,
-			floodHeight = 0
 		}
     }
 end
@@ -468,7 +447,7 @@ end
 for mod in pairs(gActiveMods) do
     if gActiveMods[mod].incompatible ~= nil and gActiveMods[mod].incompatible:find("romhack") then
         unsupported = true
-        djui_popup_create("Flood Extreme is not compatible with romhacks.", 2)
+        djui_popup_create("Flood DEMON! is not compatible with romhacks.", 2)
     end
 end
 
@@ -477,3 +456,4 @@ if game == GAME_VANILLA and not unsupported then
 end
 
 FLOOD_LEVEL_COUNT = #gLevels
+
