@@ -10,10 +10,6 @@ local rectX = bgX + 40
 INPUT_A = 0
 INPUT_JOYSTICK = 1
 
--- a
-local TEX_HAND_OPEN = get_texture_info("hand_open")
-local TEX_HAND_CLOSED = get_texture_info("hand_closed")
-
 local moved_cursor = false
 local selectionLockedToMouse = true
 local offset = 0
@@ -312,7 +308,7 @@ local function reset_main_entries()
                 entries = startEntries
                 selection = 1
             end,
-            valueText = ">"
+            valueText = ""
         },
         {
             name = "Settings",
@@ -322,7 +318,7 @@ local function reset_main_entries()
                 entries = settingEntries
                 selection = 1
             end,
-            valueText = ">"
+            valueText = ""
         },
         {
             name = "Modifiers",
@@ -332,7 +328,7 @@ local function reset_main_entries()
                 entries = modifierEntries
                 selection = 1
             end,
-            valueText = ">"
+            valueText = ""
         },
         {
             name = "Manual",
@@ -342,7 +338,7 @@ local function reset_main_entries()
                 entries = manualEntries
                 selection = 1
             end,
-            valueText = ">"
+            valueText = ""
         },
         {
             name = "Developer Manual",
@@ -351,7 +347,7 @@ local function reset_main_entries()
             func = function ()
                 djui_chat_message_create("Holy fuck, give me some time bro")
             end,
-            valueText = ">"
+            valueText = ""
         },
         {
             name = "Credits",
@@ -361,7 +357,7 @@ local function reset_main_entries()
                 entries = creditEntries
                 selection = 1
             end,
-            valueText = ">"
+            valueText = ""
         },
         {
             separator = "",
@@ -441,7 +437,6 @@ local function reset_game_selections()
     local floodMapmode = {
         [0] = "Normal",
         [1] = "Random",
-        [2] = "Voting"
     }
 
     
@@ -575,21 +570,9 @@ local function reset_general_selections()
         [SPECTATOR_MODE_FOLLOW] = "Follow"
     }
 
-    local TTCSN = {
-        [0] = "Fast",
-        [1] = "Slow",
-        [2] = "Random",
-        [3] = "None"
-    }
-
     generalEntries = {
         {separator = "General Settings",
-        name = "TTC Speed",
-        permission = PERMISSION_STAFF,
-        input = INPUT_JOYSTICK,
-        func = set_ttc_speed,
-        valueText = TTCSN[gGlobalSyncTable.ttcIndex],},
-        {name = "Spectator Mode",
+        name = "Spectator Mode",
         permission = PERMISSION_NONE,
         input = INPUT_JOYSTICK,
         func = set_spectator_mode,
@@ -685,15 +668,6 @@ local function reset_setting_selections()
             selection = 1
         end,
         valueText = ">",},
-        -- graphic settings
-        {name = "Graphic Settings",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        func = function ()
-            entries = graphicEntries
-            selection = 1
-        end,
-        valueText = ">",},
         {name = "Hud Settings",
         permission = PERMISSION_NONE,
         input = INPUT_A,
@@ -772,7 +746,7 @@ local function reset_credit_entries()
             github = zPanchito
         },
         {
-            name = "Cent",
+            name = "Cent24",
             categories = { TESTER },
             discord = "cent02.",
             modsite = nil,
@@ -786,7 +760,7 @@ local function reset_credit_entries()
             github = ElJosBar
         },
         {
-            name = "JCM(Corlg)",
+            name = "JCM-Corlg!",
             categories = { TESTER },
             discord = "jcmcorlg2010",
             modsite = nil,
