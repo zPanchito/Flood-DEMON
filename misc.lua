@@ -365,220 +365,143 @@ local function bhv_block_loop()
     load_object_collision_model()
 end
 
-local math_lerp,math_round,level_is_vanilla_level,set_lighting_color,set_vertex_color,set_fog_color,set_lighting_dir,get_skybox,math_clamp,djui_hud_set_resolution,get_lighting_color,djui_hud_set_color,djui_hud_get_screen_width,djui_hud_get_screen_height,djui_hud_render_rect,find_poison_gas_level = math.lerp,math.round,level_is_vanilla_level,set_lighting_color,set_vertex_color,set_fog_color,set_lighting_dir,get_skybox,math.clamp,djui_hud_set_resolution,get_lighting_color,djui_hud_set_color,djui_hud_get_screen_width,djui_hud_get_screen_height,djui_hud_render_rect,find_poison_gas_level
+-- name: Custom Tint
 
-local TINT_DEFAULT = { color = { r = 255, g = 255, b = 255 }, lightingDir = { x = 0, y = 0, z = 0 } }
-local TINT_CASTLE  = { color = { r = 180, g = 210, b = 255 }, lightingDir = { x = 0, y = 0, z = 1 } }
-local TINT_TTC     = { color = { r = 200, g = 255, b = 255 }, lightingDir = { x = 0, y = 1, z = 0 } }
-local TINT_PSS     = { color = { r = 255, g = 180, b = 120 }, lightingDir = { x = 0, y = 1, z = 0 } }
+gGlobalSyncTable.tintR = 0
+gGlobalSyncTable.tintG = 0
+gGlobalSyncTable.tintB = 0
+gGlobalSyncTable.hostTint = false
 
-local COLOR_WATER     = { r = 0,   g = 50,  b = 250 }
-local COLOR_JRB_WATER = { r = 0,   g = 100, b = 130 }
-local COLOR_LAVA      = { r = 255, g = 20,  b = 0   }
-local COLOR_POISON    = { r = 150, g = 200, b = 0   }
+local tint = {r=255,g=255,b=255}
+local slotName = ""
 
-if _G.dayNightCycleApi ~= nil then
-    HOUR_SUNRISE_END      = _G.dayNightCycleApi.constants.HOUR_SUNRISE_END
-    HOUR_SUNRISE_DURATION = _G.dayNightCycleApi.constants.HOUR_SUNRISE_DURATION
-
-    HOUR_DAY_START = _G.dayNightCycleApi.constants.HOUR_DAY_START
-
-    HOUR_SUNSET_START      = _G.dayNightCycleApi.constants.HOUR_SUNSET_START
-    HOUR_SUNSET_END        = _G.dayNightCycleApi.constants.HOUR_SUNSET_END
-    HOUR_SUNSET_DURATION   = _G.dayNightCycleApi.constants.HOUR_SUNSET_DURATION
+function split(str, sep)
+    local result = {}
+    for match in (str):gmatch(string.format("[^%s]+", sep or "\n")) do
+        table.insert(result, match)
+    end
+    return result
 end
 
-local sTintTable = {
-    [BACKGROUND_OCEAN_SKY] =       { color = { r = 200, g = 230, b = 255 }, lightingDir = { x = 0, y = 1,     z = 1     } },
-    [BACKGROUND_FLAMING_SKY] =     { color = { r = 255, g = 110, b = 50  }, lightingDir = { x = 0, y = -0.25, z = 0     } },
-    [BACKGROUND_UNDERWATER_CITY] = { color = { r = 130, g = 150, b = 255 }, lightingDir = { x = 0, y = 0,     z = -0.25 } },
-    [BACKGROUND_BELOW_CLOUDS] =    { color = { r = 210, g = 210, b = 255 }, lightingDir = { x = 0, y = 1,     z = 1     } },
-    [BACKGROUND_SNOW_MOUNTAINS] =  { color = { r = 160, g = 220, b = 255 }, lightingDir = { x = 0, y = 1,     z = 0     } },
-    [BACKGROUND_DESERT] =          { color = { r = 255, g = 200, b = 120 }, lightingDir = { x = 0, y = 0,     z = 0     } },
-    [BACKGROUND_HAUNTED] =         { color = { r = 180, g = 150, b = 255 }, lightingDir = { x = 0, y = -1,    z = 0     } },
-    [BACKGROUND_GREEN_SKY] =       { color = { r = 150, g = 210, b = 150 }, lightingDir = { x = 0, y = -0.5,  z = 0     } },
-    [BACKGROUND_ABOVE_CLOUDS] =    { color = { r = 120, g = 200, b = 200 }, lightingDir = { x = 0, y = 1,     z = 0     } },
-    [BACKGROUND_PURPLE_SKY] =      { color = { r = 255, g = 120, b = 255 }, lightingDir = { x = 0, y = 0,     z = 0     } }
-}
-
---- @param a number
---- @param b number
---- @param t number
---- Linearly interpolates between two points using a delta but rounds the final value
-local function lerp_round(a, b, t)
-    return math_round(math_lerp(a, b, t))
+function tobool(value)
+    local v = {
+		["true"]=true, ["false"]=false,
+		["0"]=true, ["1"]=false,
+		["on"]=true, ["off"]=false,
+		["y"]=true, ["n"]=false,
+		["yes"]=true, ["no"]=false,
+	}
+	local result = false
+	if value == 1 then
+		result = true
+	elseif value == 0 then
+		result = false
+	else
+		result = v[value] or false
+	end
+    return result
 end
 
---- @param a Color
---- @param b Color
---- @return Color
---- Linearly interpolates between two colors using a delta
-local function color_lerp(a, b, t)
-    return {
-        r = lerp_round(a.r, b.r, t),
-        g = lerp_round(a.g, b.g, t),
-        b = lerp_round(a.b, b.b, t)
-    }
-end
-
---- @param a Color
---- @param b Color
---- @return Color
---- Multiplies two colors together
-local function color_mul(a, b)
-    return {
-        r = a.r * (b.r / 255.0),
-        g = a.g * (b.g / 255.0),
-        b = a.b * (b.b / 255.0)
-    }
-end
-
---- @param a Vec3f
---- @param b Vec3f
---- @return Vec3f
---- Linearly interpolates between two Vec3fs using a delta
-local function vec3f_lerp(a, b, t)
-    return {
-        x = math_lerp(a.x, b.x, t),
-        y = math_lerp(a.y, b.y, t),
-        z = math_lerp(a.z, b.z, t)
-    }
-end
-
---- @param levelNum LevelNum
---- Returns whether or not the local player is in a vanilla level
-local function in_vanilla_level(levelNum)
-    return gNetworkPlayers[0].currLevelNum == levelNum and level_is_vanilla_level(levelNum)
-end
-
---- @param color Color
---- @param lightingDir Vec3f
---- Sets the properties of the world
-local function set_world_properties(color, lightingDir)
+local function set_tint(color)
     set_lighting_color(0, color.r)
     set_lighting_color(1, color.g)
     set_lighting_color(2, color.b)
+    set_lighting_color_ambient(0, color.r)
+    set_lighting_color_ambient(1, color.g)
+    set_lighting_color_ambient(2, color.b)
     set_vertex_color(0, color.r)
     set_vertex_color(1, color.g)
     set_vertex_color(2, color.b)
     set_fog_color(0, color.r)
     set_fog_color(1, color.g)
     set_fog_color(2, color.b)
-    set_lighting_dir(0, lightingDir.x)
-    set_lighting_dir(1, lightingDir.y)
-    set_lighting_dir(2, lightingDir.z)
+    set_skybox_color(0, math.min(color.r+10,255))
+    set_skybox_color(1, math.min(color.g+10,255))
+    set_skybox_color(2, math.min(color.b+10,255))
 end
-
---- Gets the environment tint in the current level/area
-local function get_environment_tint()
-    local skybox = get_skybox()
-    local tint = sTintTable[skybox]
-    if tint == nil then -- we're probably in an interior area
-        if in_vanilla_level(LEVEL_CASTLE) then
-            tint = TINT_CASTLE
-        elseif in_vanilla_level(LEVEL_CCM) then
-            tint = sTintTable[BACKGROUND_SNOW_MOUNTAINS]
-        elseif in_vanilla_level(LEVEL_LLL) then
-            tint = sTintTable[BACKGROUND_FLAMING_SKY]
-        elseif in_vanilla_level(LEVEL_HMC) then
-            tint = sTintTable[BACKGROUND_GREEN_SKY]
-        elseif in_vanilla_level(LEVEL_DDD) or in_vanilla_level(LEVEL_THI) then
-            tint = sTintTable[BACKGROUND_OCEAN_SKY]
-        elseif in_vanilla_level(LEVEL_WDW) then
-            tint = sTintTable[BACKGROUND_UNDERWATER_CITY]
-        elseif in_vanilla_level(LEVEL_SSL) then
-            tint = sTintTable[BACKGROUND_DESERT]
-        elseif in_vanilla_level(LEVEL_TTC) then
-            tint = TINT_TTC
-        elseif in_vanilla_level(LEVEL_PSS) then
-            tint = TINT_PSS
-        else
-            tint = TINT_DEFAULT
-        end
-    end
-
-    return tint
-end
-
---- [DNC Only] Gets the level between 0.0 and 1.0 that the environment tint should be at based on the time
-local function get_tint_intensity()
-    local minutes = _G.dayNightCycleApi.get_time_minutes()
-
-    local t = 0.0
-    if minutes >= HOUR_SUNRISE_END and minutes <= HOUR_DAY_START then
-        t = math_clamp((minutes - HOUR_SUNRISE_END) / HOUR_SUNRISE_DURATION, 0, 1)
-    elseif minutes >= HOUR_SUNSET_START and minutes <= HOUR_SUNSET_END then
-        t = 1 - math_clamp((minutes - HOUR_SUNSET_START) / (HOUR_SUNSET_DURATION * 0.5), 0, 1)
-    elseif minutes > HOUR_DAY_START and minutes < HOUR_SUNSET_START then
-        t = 1.0
-    end
-
-    return t
-end
-
---- @param color Color
-local function dnc_set_lighting_color(color)
-    return color_lerp(color, get_environment_tint().color, get_tint_intensity())
-end
-
---- @param lightingDir Vec3f
-local function dnc_set_lighting_dir(lightingDir)
-    return vec3f_lerp(lightingDir, get_environment_tint().lightingDir, get_tint_intensity())
-end
-
-local function dnc_sun_times_changed()
-    HOUR_SUNRISE_END = _G.dayNightCycleApi.constants.HOUR_SUNRISE_END
-
-    HOUR_DAY_START = _G.dayNightCycleApi.constants.HOUR_DAY_START
-
-    HOUR_SUNSET_START = _G.dayNightCycleApi.constants.HOUR_SUNSET_START
-    HOUR_SUNSET_END = _G.dayNightCycleApi.constants.HOUR_SUNSET_END
-end
-
 
 local function update()
-    local tint = get_environment_tint()
-    set_world_properties(tint.color, tint.lightingDir)
+	if gGlobalSyncTable.globalTint == true then
+	set_tint({
+		r = gGlobalSyncTable.tintR,
+		g = gGlobalSyncTable.tintG,
+		b = gGlobalSyncTable.tintB
+	})
+	else
+		set_tint(tint)
+	end
+	if network_is_server() then
+		gGlobalSyncTable.tintR = tint.r
+		gGlobalSyncTable.tintG = tint.g
+		gGlobalSyncTable.tintB = tint.b
+	end
 end
 
-local function on_hud_render_behind()
-    if gNetworkPlayers[0].currActNum == 99 then return end
-
-    --- @type MarioState
-    local m = gMarioStates[0]
-    if gLakituState.pos.y < m.waterLevel then
-        djui_hud_set_resolution(RESOLUTION_DJUI)
-
-        lightingColor = { r = get_lighting_color(0), g = get_lighting_color(1), b = get_lighting_color(2) }
-        if in_vanilla_level(LEVEL_JRB) then
-            local color = color_mul(COLOR_JRB_WATER, lightingColor)
-            djui_hud_set_color(color.r, color.g, color.b, 100)
-        elseif in_vanilla_level(LEVEL_LLL) then
-            local color = color_mul(COLOR_LAVA, lightingColor)
-            djui_hud_set_color(color.r, color.g, color.b, 175)
-        else
-            local color = color_mul(COLOR_WATER, lightingColor)
-            djui_hud_set_color(color.r, color.g, color.b, 100)
-        end
-        djui_hud_render_rect(0, 0, djui_hud_get_screen_width(), djui_hud_get_screen_height())
-    elseif gLakituState.pos.y < find_poison_gas_level(m.pos.x, m.pos.z) then
-        djui_hud_set_resolution(RESOLUTION_DJUI)
-
-        djui_hud_set_color(COLOR_POISON.r, COLOR_POISON.g, COLOR_POISON.b, 100)
-        djui_hud_render_rect(0, 0, djui_hud_get_screen_width(), djui_hud_get_screen_height())
-    end
+function save_tint()
+	local key = "tint_"..slotName
+	local tintString = tostring(tint.r).."_"..tostring(tint.g).."_"..tostring(tint.b)
+	mod_storage_save(key, tintString)
+	if mod_storage_load("tint_"..slotName) ~= nil then
+		djui_popup_create("Tint '"..slotName.."' saved!", 1) 
+	else
+		djui_popup_create("Tint '"..slotName.."' couldn't be saved.\n\nHere is some possible reasons of it:\n- Script Error.\n- Name has characters that cannot be used.", 5)
+	end
 end
 
-if _G.dayNightCycleApi ~= nil then
-    _G.dayNightCycleApi.dnc_hook_event(_G.dayNightCycleApi.constants.DNC_HOOK_SET_LIGHTING_COLOR, dnc_set_lighting_color)
-    _G.dayNightCycleApi.dnc_hook_event(_G.dayNightCycleApi.constants.DNC_HOOK_SET_AMBIENT_LIGHTING_COLOR, dnc_set_lighting_color)
-    _G.dayNightCycleApi.dnc_hook_event(_G.dayNightCycleApi.constants.DNC_HOOK_SET_LIGHTING_DIR, dnc_set_lighting_dir)
-    _G.dayNightCycleApi.dnc_hook_event(_G.dayNightCycleApi.constants.DNC_HOOK_SUN_TIMES_CHANGED, dnc_sun_times_changed)
-    _G.dayNightCycleApi.dnc_hook_event(_G.dayNightCycleApi.constants.DNC_HOOK_ON_HUD_RENDER_BEHIND, on_hud_render_behind)
+function load_tint()
+	local key = "tint_"..slotName
+	local tintString = mod_storage_load(key)
+	if tintString == nil then
+		djui_popup_create("Tint '"..slotName.."' dosen't exists.", 1)
+		return
+	end
+	local table = split(tintString, "_")
+	if #table < 3 then
+		djui_popup_create("Tint '"..slotName.."' has wrong format.", 1)
+		return
+	end
+	tint.r = tonumber(table[1])
+	tint.g = tonumber(table[2])
+	tint.b = tonumber(table[3])
+	djui_popup_create("Tint '"..slotName.."' loaded!", 1)
+end
+
+if VERSION_NUMBER < 38 then
+	hook_chat_command("set-tint", " [red] [green] [blue]", function(msg)
+		local table = split(msg, " ")
+		tint.r = tonumber(table[1])
+		tint.g = tonumber(table[2])
+		tint.b = tonumber(table[3])
+		return true
+	end)
+	hook_chat_command("save-tint", " [name]", function(msg)
+		slotName = msg
+		save_tint()
+		return true
+	end)
+	hook_chat_command("load-tint", " [name]", function(msg)
+		slotName = msg
+		load_tint()
+		return true
+	end)
+	if network_is_server() then
+		hook_chat_command("force-host-tint", " [on|off]", function(msg)
+			gGlobalSyncTable.hostTint = tobool(msg)
+			return true
+		end)
+	end
 else
-    hook_event(HOOK_UPDATE, update)
-    hook_event(HOOK_ON_HUD_RENDER_BEHIND, on_hud_render_behind)
+	hook_mod_menu_slider("Red Component:", tint.r, 25, 255, function(_,v) tint.r = v end)
+	hook_mod_menu_slider("Green Component:", tint.g, 25, 255, function(_,v) tint.g = v end)
+	hook_mod_menu_slider("Blue Component:", tint.b, 25, 255, function(_,v) tint.b = v end)
+	if network_is_server() then
+		hook_mod_menu_checkbox("Force Host Tint", gGlobalSyncTable.hostTint, function(_,v) gGlobalSyncTable.hostTint = v end)
+	end
+	hook_mod_menu_inputbox("Slot Name", slotName, 128, function(_,v) slotName = v end)
+	hook_mod_menu_button("Save Tint", save_tint)
+	hook_mod_menu_button("Load Tint", load_tint)
 end
+hook_event(HOOK_UPDATE, update)
 
 hook_event(HOOK_UPDATE, water_check)
 hook_event(HOOK_ON_LEVEL_INIT, water_check)
