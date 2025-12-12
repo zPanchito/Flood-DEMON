@@ -1,7 +1,7 @@
--- name: !Flood \\#900C3F\\DEMON! \\#dcdcdc\\Pre-Release [WIP]
+-- name: Flood \\#900C3F\\DEMON! \\#dcdcdc\\Pre-Release [WIP]
 -- ignore-script-warnings: true
 -- incompatible: gamemode
--- description: 
+-- description: \\#dcdcdc\\F\\#900C3F\\DM!, \\#dcdcdc\\sequel to Flood Extreme (stop the floods!) created by \\#555555\\Erik\n\n\\\#00ff00\\zPan\\#ffff00\\cho!\\#dcdcdc\\: Flood \\#900C3F\\DEMON!\n\\\#555555\\Erik\\#dcdcdc\\: Flood \\#8B0000\\Extreme\n\\\#ff0000\\DT Ryan\\#dcdcdc\\: Flood \\#ff0000\\Nightmare\n\\\#7089b8\\birdekek\\#dcdcdc\\: Flood Expanded\n\\\#9b9b9b\\Agent \\#ec7731\\X\\#dcdcdc\\: Flood\n\n\-- Texters --\n\n\\\#ff00ac\\Cent24\n\\\#003e00\\Goku\n\\\#00b4ff\\JCM-\\#007cff\\Corlg!\n\n\\\#dcdcdc\\-- Thanks --\n\n\\\#ffff00\\Super\\#00a100\\Rodrigo0\\#dcdcdc\\: \\#dcdcdc\\Lobby Map\n\\\#555555\\Erik\\#dcdcdc\\: \\#dcdcdc\\Developer\n\Blo\\#0000ff\\cky\\#dcdcdc\\: \\#dcdcdc\\Pause Menu\n\n\-- Extras --\n\n\The pause menu is from Flood+ xd\n\2026!!!
 if unsupported then return end
 
 local network_player_connected_count,init_single_mario,warp_to_level,play_sound,network_get_player_text_color_string,djui_chat_message_create,disable_time_stop,network_player_set_description,set_mario_action,obj_get_first_with_behavior_id,obj_check_hitbox_overlap,spawn_mist_particles,vec3f_dist,play_race_fanfare,play_music,djui_hud_set_resolution,djui_hud_get_screen_height,djui_hud_get_screen_width,djui_hud_render_rect,djui_hud_set_font,djui_hud_world_pos_to_screen_pos,clampf,math_floor,djui_hud_measure_text,djui_hud_print_text,hud_render_power_meter,hud_get_value,save_file_erase_current_backup_save,save_file_set_flags,save_file_set_using_backup_slot,find_floor_height,spawn_non_sync_object,vec3f_set,vec3f_copy,math_random,set_ttc_speed_setting,get_level_name,hud_hide,smlua_text_utils_secret_star_replace,smlua_audio_utils_replace_sequence = network_player_connected_count,init_single_mario,warp_to_level,play_sound,network_get_player_text_color_string,djui_chat_message_create,disable_time_stop,network_player_set_description,set_mario_action,obj_get_first_with_behavior_id,obj_check_hitbox_overlap,spawn_mist_particles,vec3f_dist,play_race_fanfare,play_music,djui_hud_set_resolution,djui_hud_get_screen_height,djui_hud_get_screen_width,djui_hud_render_rect,djui_hud_set_font,djui_hud_world_pos_to_screen_pos,clampf,math.floor,djui_hud_measure_text,djui_hud_print_text,hud_render_power_meter,hud_get_value,save_file_erase_current_backup_save,save_file_set_flags,save_file_set_using_backup_slot,find_floor_height,spawn_non_sync_object,vec3f_set,vec3f_copy,math.random,set_ttc_speed_setting,get_level_name,hud_hide,smlua_text_utils_secret_star_replace,smlua_audio_utils_replace_sequence
@@ -1219,10 +1219,9 @@ local function on_flood_command(msg)
             return on_classic_command(args[2] or "")
         end
 
-        djui_chat_message_create("/flood \\#650000\\[start|speed|time|mode|mods|og|hide|score|info|font|menu|spect]")
+		on_fex_command()
         return true
     else
-        djui_chat_message_create("Commands are disabled!")
     end
 end
 
@@ -1241,10 +1240,9 @@ local function on_flood_baby_command(msg)
             return on_font_command(args[2] or "")	
         end
 
-        djui_chat_message_create("/flood \\#650000\\[info|score|hide|font|spect]")
+		on_fex_command()
         return true
     else
-        djui_chat_message_create("Commands are disabled!")
     end
 end
 
@@ -1257,9 +1255,6 @@ local function coin_update(m, o, interactType)
      	end	
     end
 end
-
---polno de tits
---a
 
 hud_hide()
 
@@ -1280,4 +1275,5 @@ end
 if network_is_server() or network_is_moderator() then
     hook_chat_command("flood", "\\#650000\\[start|speed|time|mode|mods|og|hide|score|info|font|menu|spect]", on_flood_command)
 end
-hook_chat_command("menu", "FHL menu", on_fex_command)
+hook_chat_command("menu", "flood menu", on_fex_command)
+
