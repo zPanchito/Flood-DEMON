@@ -13,7 +13,7 @@ local LOBBY_MAPS = {
     ["bowser-2"] = LEVEL_BOWSER_2,
     ["bowser-3"] = LEVEL_BOWSER_3,
 	["courtyard"] = LEVEL_CASTLE_COURTYARD,
-	["castle"] = LEVEL_CASTLE, area = 2
+	["castle"] = LEVEL_CASTLE
 }
 
 ROUND_STATE_INACTIVE   = 0
@@ -1198,5 +1198,6 @@ if network_is_server() or network_is_moderator() then
     hook_chat_command("flood", "\\#650000\\[start|speed|time|mode|mods|hide|score|info|menu|spect|lobby]", on_flood_command)
 end
 hook_chat_command("menu", "flood menu", on_fd_command)
+
 
 
