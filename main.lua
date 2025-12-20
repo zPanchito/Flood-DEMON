@@ -1,12 +1,20 @@
--- name: Flood \\#900C3F\\DEMON! \\#dcdcdc\\Pre-Release [WIP]
+-- name: Flood \\#900C3F\\DEMON! \\#dcdcdc\\[WIP]
 -- ignore-script-warnings: true
 -- incompatible: gamemode
 -- description: \\#dcdcdc\\F\\#900C3F\\DM!, \\#dcdcdc\\sequel to Flood Extreme (stop the floods!) created by \\#555555\\Erik\n\n\\\#00ff00\\zPan\\#ffff00\\cho!\\#dcdcdc\\: Flood \\#900C3F\\DEMON!\n\\\#555555\\Erik\\#dcdcdc\\: Flood \\#8B0000\\Extreme\n\\\#ff0000\\DT Ryan\\#dcdcdc\\: Flood \\#ff0000\\Nightmare\n\\\#7089b8\\birdekek\\#dcdcdc\\: Flood Expanded\n\\\#9b9b9b\\Agent \\#ec7731\\X\\#dcdcdc\\: Flood\n\n\-- Texters --\n\n\\\#ff00ac\\Cent24\n\\\#003e00\\Goku\n\\\#00b4ff\\JCM-\\#007cff\\Corlg!\n\n\\\#dcdcdc\\-- Thanks --\n\n\\\#ffff00\\Super\\#00a100\\Rodrigo0\\#dcdcdc\\: \\#dcdcdc\\Lobby Map\n\\\#555555\\Erik\\#dcdcdc\\: \\#dcdcdc\\Developer\n\Blo\\#0000ff\\cky\\#dcdcdc\\: \\#dcdcdc\\Pause Menu\n\n\-- Extras --\n\n\The pause menu is from Flood+ xd\n\2026!!!
 if unsupported then return end
+-- I'll Watch As You Bleed, For I Warned you and Warned you Did Not Heed It's Your Fault And Hers Too Why I Did What I Did It Was All For You AW SHUCKS
 
 local network_player_connected_count,init_single_mario,warp_to_level,play_sound,network_get_player_text_color_string,djui_chat_message_create,disable_time_stop,network_player_set_description,set_mario_action,obj_get_first_with_behavior_id,obj_check_hitbox_overlap,spawn_mist_particles,vec3f_dist,play_race_fanfare,play_music,djui_hud_set_resolution,djui_hud_get_screen_height,djui_hud_get_screen_width,djui_hud_render_rect,djui_hud_set_font,djui_hud_world_pos_to_screen_pos,clampf,math_floor,djui_hud_measure_text,djui_hud_print_text,hud_render_power_meter,hud_get_value,save_file_erase_current_backup_save,save_file_set_flags,save_file_set_using_backup_slot,find_floor_height,spawn_non_sync_object,vec3f_set,vec3f_copy,math_random,set_ttc_speed_setting,get_level_name,hud_hide,smlua_text_utils_secret_star_replace,smlua_audio_utils_replace_sequence = network_player_connected_count,init_single_mario,warp_to_level,play_sound,network_get_player_text_color_string,djui_chat_message_create,disable_time_stop,network_player_set_description,set_mario_action,obj_get_first_with_behavior_id,obj_check_hitbox_overlap,spawn_mist_particles,vec3f_dist,play_race_fanfare,play_music,djui_hud_set_resolution,djui_hud_get_screen_height,djui_hud_get_screen_width,djui_hud_render_rect,djui_hud_set_font,djui_hud_world_pos_to_screen_pos,clampf,math.floor,djui_hud_measure_text,djui_hud_print_text,hud_render_power_meter,hud_get_value,save_file_erase_current_backup_save,save_file_set_flags,save_file_set_using_backup_slot,find_floor_height,spawn_non_sync_object,vec3f_set,vec3f_copy,math.random,set_ttc_speed_setting,get_level_name,hud_hide,smlua_text_utils_secret_star_replace,smlua_audio_utils_replace_sequence
 
-LEVEL_LOBBY = LEVEL_ZEROLIFE
+local LOBBY_MAPS = {
+    ["zerolife"] = LEVEL_ZEROLIFE,
+    ["bowser-1"] = LEVEL_BOWSER_1,
+    ["bowser-2"] = LEVEL_BOWSER_2,
+    ["bowser-3"] = LEVEL_BOWSER_3,
+	["courtyard"] = LEVEL_CASTLE_COURTYARD,
+	["castle"] = LEVEL_CASTLE, area = 2
+}
 
 ROUND_STATE_INACTIVE   = 0
 ROUND_STATE_ACTIVE     = 1
@@ -18,6 +26,14 @@ SPECTATOR_MODE_FOLLOW  = 1
 
 TEX_GEO_TAG = get_texture_info("hitbox")
 
+local geoTagRotation = 0 -- Variable para guardar el ángulo de rotación
+local previousHealth = 0x880
+local shakeTimer = 0
+local shakeOffsetX = 0
+local shakeOffsetY = 0
+local SHAKE_INTENSITY_HIT = 1  
+local SHAKE_INTENSITY_LOW = 1  
+local SHAKE_DURATION = 12      
 local globalTimer = 0
 local listedSurvivors = false
 local m = gMarioStates[0]
@@ -29,6 +45,7 @@ deathspawn = 0
 gGlobalSyncTable.roundState = ROUND_STATE_INACTIVE
 gGlobalSyncTable.timer = ROUND_COOLDOWN
 gGlobalSyncTable.level = 1
+gGlobalSyncTable.currentLobby = LEVEL_ZEROLIFE
 gGlobalSyncTable.waterLevel = -20000
 gGlobalSyncTable.speedMultiplier = 1
 gGlobalSyncTable.coinCount = 4
@@ -36,12 +53,9 @@ gGlobalSyncTable.difficulty = 1
 gGlobalSyncTable.mapMode = 0
 gGlobalSyncTable.popups = true
 gGlobalSyncTable.isPermitted = true
-gGlobalSyncTable.modif_coinless = false
-gGlobalSyncTable.modif_trollface = false
+gGlobalSyncTable.killInactive = true
 gGlobalSyncTable.modif_daredevil = false
-gGlobalSyncTable.modif_slide_jump = false
 gGlobalSyncTable.modif_pvp = false
-gLevelValues.entryLevel = LEVEL_LOBBY
 gLevelValues.floorLowerLimit = -20000
 gLevelValues.floorLowerLimitMisc = -20000 + 1000
 gLevelValues.floorLowerLimitShadow = -20000 + 1000.0
@@ -57,15 +71,6 @@ gLevelValues.vanishCapDurationVcutm = 150
 gServerSettings.skipIntro = 1
 gServerSettings.stayInLevelAfterStar = 2
 if moveset then gGlobalSyncTable.modif_trollface = true end
-
-eFloodVariables = {
-    customMusic = true,
-    spectatorMode = SPECTATOR_MODE_NORMAL,
-    welcomeMessage = true,
-    holidayEvents = true,
-    scrollingFlood = true,
-    trailParticleVisibility = true,
-}
 
 eFloodVariables = {
     hudHide = false,
@@ -315,10 +320,11 @@ local function update()
 
     if network_is_server() then server_update() end
 
-    if gGlobalSyncTable.roundState ~= ROUND_STATE_ACTIVE then
-        if gNetworkPlayers[0].currLevelNum ~= LEVEL_LOBBY or gNetworkPlayers[0].currActNum ~= 0 then
-            warp_to_level(LEVEL_LOBBY, 1, 0)
-        end                
+	-- Busca este bloque en la función update()
+	if gGlobalSyncTable.roundState ~= ROUND_STATE_ACTIVE then
+		if gNetworkPlayers[0].currLevelNum ~= gGlobalSyncTable.currentLobby or gNetworkPlayers[0].currActNum ~= 0 then
+			warp_to_level(gGlobalSyncTable.currentLobby, 1, 0)
+		end                           
     elseif gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
         if gNetworkPlayers[0].currLevelNum ~= gLevels[gGlobalSyncTable.level].level or gNetworkPlayers[0].currActNum ~= floodact then
             mario_set_full_health(gMarioStates[0])
@@ -346,12 +352,16 @@ local function mario_update(m)
         network_player_set_override_location(gNetworkPlayers[m.playerIndex], "Lobby")
     end
 
-    if m.health > 0xff and not gPlayerSyncTable[m.playerIndex].finished then
-        network_player_set_description(gNetworkPlayers[m.playerIndex], "Alive", 75, 255, 75, 255)
-    elseif m.health > 0xff then
-        network_player_set_description(gNetworkPlayers[m.playerIndex], "GG!", 255, 215, 0, 255)
-    else
-        network_player_set_description(gNetworkPlayers[m.playerIndex], "Dead", 255, 75, 75, 255)
+    if m.marioObj then
+        if m.health <= 0xff then
+            m.marioObj.header.gfx.node.flags = m.marioObj.header.gfx.node.flags | GRAPH_RENDER_INVISIBLE
+            m.particleFlags = 0 
+            network_player_set_description(gNetworkPlayers[m.playerIndex], "Died", 120, 20, 20, 255)
+        elseif gPlayerSyncTable[m.playerIndex].finished then
+            network_player_set_description(gNetworkPlayers[m.playerIndex], "!GG!", 255, 100, 0, 255)
+        else
+            network_player_set_description(gNetworkPlayers[m.playerIndex], "Alive", 23, 255, 0, 255)
+        end
     end
 	
     if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
@@ -363,31 +373,66 @@ local function mario_update(m)
        deadp = 0
     end
 
-    if m.playerIndex == 0 then
-        if m.health <= 0xFF and deadp == 0 then
-            if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE and timerr > 60 and gGlobalSyncTable.popups == true then
-                deadp = 1
-                djui_popup_create_global(network_get_player_text_color_string(0)..gNetworkPlayers[m.playerIndex].name.."\\#ffffff\\ has died", 1)
-            end
-        end
-    end	
-
     if m.playerIndex ~= 0 then return end
 
-    ---@type MarioState
-    local m = gMarioStates[0]
-    ---@type Camera
-    local c = gMarioStates[0].area.camera
-
-    if m == nil or c == nil then
-        return
+    if m.health < previousHealth and m.health > 0xFF then
+        shakeTimer = SHAKE_DURATION
+    elseif m.health <= 0x200 and m.health > 0xFF then
+        if shakeTimer < 2 then shakeTimer = 5 end
     end
+    previousHealth = m.health
+
+    local c = gMarioStates[0].area.camera
+    if m == nil or c == nil then return end
 
     if m.action == ACT_STEEP_JUMP then
         m.action = ACT_JUMP
     elseif m.action == ACT_JUMBO_STAR_CUTSCENE then
         m.flags = m.flags | MARIO_WING_CAP
     end
+
+    if gGlobalSyncTable.roundState ~= ROUND_STATE_ACTIVE then
+        mario_set_full_health(m)
+        local DEATH_LIMIT = -6500
+        if m.pos.y < DEATH_LIMIT then
+			if deathspawn == 0 then
+			vec3f_set(m.pos, -4659, -3648, -201)
+			else
+			vec3f_set(m.pos, 2663, -2991, -622)
+			end
+            m.faceAngle.y = 0x0000
+            set_mario_action(m, ACT_SPAWN_NO_SPIN_AIRBORNE, 0)
+            m.vel.y = 0
+        end
+    end
+
+    if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
+        
+        if gPlayerSyncTable[0].finished then
+            mario_set_full_health(m)
+            if network_player_connected_count() > 1 then
+                if m.pos.y < 9000 then
+                    m.pos.y = 1924 
+                    m.vel.y = 142
+                end
+                set_mario_spectator(m)
+            end
+        else
+            if (m.pos.y + 40 < gGlobalSyncTable.waterLevel) or (m.pos.y < -8000) or (m.health <= 0xff) then
+                m.health = 0xFF
+                
+                if network_player_connected_count() > 1 then
+                    m.pos.y = 1924
+                    m.vel.y = 142
+                    m.area.camera.cutscene = 0
+                    set_mario_spectator(m)
+                else
+                    end_var()
+                end
+            else
+                gPlayerSyncTable[0].time = gPlayerSyncTable[0].time + 1
+            end
+        end
 
     if gLevels[gGlobalSyncTable.level].surfaceKill ~= true then
         if m.floor ~= nil and (m.floor.type == SURFACE_INSTANT_QUICKSAND or m.floor.type == SURFACE_INSTANT_MOVING_QUICKSAND) then
@@ -398,150 +443,107 @@ local function mario_update(m)
             m.floor.type = ACT_QUICKSAND_DEATH
         end
     end
-
-    if gGlobalSyncTable.roundState ~= ROUND_STATE_ACTIVE then
-        if eFloodVariables.classic == false then
-            mario_set_full_health(m)
-            m.peakHeight = m.pos.y
-            local DEATH = -6500
-            if m.pos.y < DEATH then
-                if deathspawn == 0 then
-                    vec3f_set(m.pos, -2042, -2926, 1179)
-                    m.faceAngle.y = 0x0000
-                else
-                    vec3f_set(m.pos, 4503, 190, -6253)
-                    m.faceAngle.y = -0x4000
-                end
-                set_mario_action(m, ACT_SPAWN_NO_SPIN_AIRBORNE, 0)
-                m.vel.y = 0
-            end
-        elseif eFloodVariables.classic == true then
-            if m.floor ~= nil and (m.floor.type == SURFACE_DEATH_PLANE) then
-                m.floor.type = SURFACE_DEFAULT
-            end			
-            return
-        end
-    end
-
-    if gGlobalSyncTable.modif_slide_jump == false then
-        if m.action == ACT_STEEP_JUMP then
-            m.action = ACT_JUMP
-        end
-    end
-		
-    if gNetworkPlayers[0].currLevelNum == LEVEL_WMOTR then
-        m.flags = m.flags | MARIO_WING_CAP
-	end
-
-    if (m.action == ACT_SPAWN_NO_SPIN_AIRBORNE or m.action == ACT_SPAWN_NO_SPIN_LANDING or m.action == ACT_SPAWN_SPIN_AIRBORNE or m.action == ACT_SPAWN_SPIN_LANDING) and m.pos.y < m.floorHeight + 10 then
+	
+	if (m.action == ACT_SPAWN_NO_SPIN_AIRBORNE or m.action == ACT_SPAWN_NO_SPIN_LANDING or m.action == ACT_SPAWN_SPIN_AIRBORNE or m.action == ACT_SPAWN_SPIN_LANDING) and m.pos.y < m.floorHeight + 10 then
         set_mario_action(m, ACT_FREEFALL, 0)
     end
 
-    if gNetworkPlayers[0].currLevelNum == LEVEL_SA then
-        m.peakHeight = m.pos.y
-
-        local star = obj_get_first_with_behavior_id(id_bhvFinalStar)
-        if star ~= nil and obj_check_hitbox_overlap(m.marioObj, star)
-        and m.action ~= ACT_JUMBO_STAR_CUTSCENE
-        and m.health > 0xFF then
-            spawn_mist_particles()
-            set_mario_action(m, ACT_JUMBO_STAR_CUTSCENE, 0)
-        end
-
-        if m.action == ACT_JUMBO_STAR_CUTSCENE and m.actionTimer >= 499 then
-            set_mario_spectator(m)
-        end
-    end
-
-    if gGlobalSyncTable.modif_daredevil == true then 
-        if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-            m.health = 256 
-            if m.hurtCounter > 0.1 or m.pos.y + 40 < gGlobalSyncTable.waterLevel or m.action == ACT_STANDING_DEATH or m.action == ACT_DEATH_EXIT then 
-            m.health = 0xFF 
-            end
-        end      
-    end
-
-    if gNetworkPlayers[0].currLevelNum == gLevels[gGlobalSyncTable.level].level and not gPlayerSyncTable[0].finished and ((gNetworkPlayers[0].currLevelNum ~= LEVEL_CTT and m.pos.y == m.floorHeight)
-    or ((gNetworkPlayers[0].currLevelNum == LEVEL_CTT and m.action == ACT_JUMBO_STAR_CUTSCENE)) or (m.action & ACT_FLAG_ON_POLE) ~= 0)
-    and vec3f_dist(m.pos, gLevels[gGlobalSyncTable.level].goalPos) < 755
-    and m.health > 0xFF then
-        if m.playerIndex ~= 0 then return end
-
-        gPlayerSyncTable[0].finished = true
-        if gGlobalSyncTable.popups == true then
-            djui_popup_create_global(network_get_player_text_color_string(0) .. gNetworkPlayers[0].name .. "\\#dcdcdc\\ has finished in\n Time: \\#00ff00\\" .. string.format("%.3f", gPlayerSyncTable[0].time / 30), 2)
-        end
-        
-        local string = ""
-        if gNetworkPlayers[0].currLevelNum ~= LEVEL_CTT then
-            string = string .. djui_chat_message_create("You escaped the flood!\nTime: \\#bb0000\\" .. string.format("%.3f", gPlayerSyncTable[0].time / 30))
-            play_race_fanfare()
-        else
-            string = string .. djui_chat_message_create("\\#00ff00\\You escaped CTT, \\#ffff00\\Congratulations!\n")
-            play_music(0, SEQUENCE_ARGS(8, SEQ_EVENT_CUTSCENE_VICTORY), 0)
-        end
-    end
-
-    if gPlayerSyncTable[0].finished then
-        mario_set_full_health(m)
-        if network_player_connected_count() > 1
-        and m.action ~= ACT_JUMBO_STAR_CUTSCENE
-        and gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-            set_mario_spectator(m)
-        end
-    else
-        if m.playerIndex ~= 0 then return end
-
-        if (m.flags & MARIO_METAL_CAP) ~= 0 then
-            m.particleFlags = m.particleFlags | PARTICLE_SPARKLES
-        elseif (m.flags & MARIO_VANISH_CAP) ~= 0 then
-            m.particleFlags = m.particleFlags | PARTICLE_DUST
-        elseif (m.flags & MARIO_WING_CAP) ~= 0 then
-            m.particleFlags = m.particleFlags | PARTICLE_SPARKLES		  
-        end		
-	   
-	    if (m.action == ACT_SPAWN_NO_SPIN_AIRBORNE or m.action == ACT_SPAWN_NO_SPIN_LANDING or m.action == ACT_SPAWN_SPIN_AIRBORNE or m.action == ACT_SPAWN_SPIN_LANDING) then
-	        m.particleFlags = m.particleFlags | PARTICLE_SPARKLES
-	    end
-
-        if m.action == ACT_QUICKSAND_DEATH or m.action == ACT_STANDING_DEATH then
-            m.health = 0xff
-        end
-		
-		if m.area.camera.cutscene == CUTSCENE_DEATH_EXIT or m.area.camera.cutscene == CUTSCENE_DEATH_ON_BACK or m.area.camera.cutscene == CUTSCENE_DEATH_ON_STOMACH then
-		    set_mario_spectator(m)
-		end	
-
-        if m.pos.y + 40 < gGlobalSyncTable.waterLevel then
-            if (m.flags & MARIO_METAL_CAP) ~= 0 then
-            elseif (m.flags & MARIO_VANISH_CAP ) ~= 0 then
-                m.health = m.health - 3000 * gGlobalSyncTable.difficulty
-            else
-                m.health = m.health - 3000 * gGlobalSyncTable.difficulty
+        -- Detección de Meta
+        if gNetworkPlayers[0].currLevelNum == gLevels[gGlobalSyncTable.level].level and not gPlayerSyncTable[0].finished then
+            if vec3f_dist(m.pos, gLevels[gGlobalSyncTable.level].goalPos) < 498 and m.health > 0xFF then
+                gPlayerSyncTable[0].finished = true
+                if gGlobalSyncTable.popups then
+                    djui_popup_create_global(network_get_player_text_color_string(0) .. gNetworkPlayers[0].name .. "\\#dcdcdc\\ has finished in\n " .. "\\#dcdcdc\\ Place. Time: \\#00ff00\\" .. string.format("%.3f", gPlayerSyncTable[0].time / 30), 2)
+					play_race_fanfare()
+                end
             end
         end
-
-        if m.health <= 0xff then
-            if network_player_connected_count() > 1 and gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-                m.area.camera.cutscene = 0
-                set_mario_spectator(m)
-            elseif network_player_connected_count() == 1 and gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-                end_var()
-            end
-        else
-            gPlayerSyncTable[0].time = gPlayerSyncTable[0].time + 1
-        end
     end
-end 
-
--- carajo creo que fue mala idea 
+end
 local function on_hud_render()
     local water = obj_get_first_with_behavior_id(id_bhvWater)
     if gNetworkPlayers[0].currLevelNum == gLevels[gGlobalSyncTable.level].level and water ~= nil then
         djui_hud_set_resolution(RESOLUTION_DJUI)
         if gLakituState.pos.y < gGlobalSyncTable.waterLevel + 2 then
             switch(water.oAnimState, {
+                [FLOOD_WATER] = function()
+                    djui_hud_set_adjusted_color(0, 20, 200, 175)
+                end,
+                [FLOOD_LAVA] = function()
+                    djui_hud_set_adjusted_color(200, 0, 0, 175)
+                end,
+                [FLOOD_SAND] = function()
+                    djui_hud_set_adjusted_color(254, 193, 121, 230)
+                end,
+                [FLOOD_MUD] = function()
+                    djui_hud_set_adjusted_color(128, 71, 34, 240)
+                end,
+                [FLOOD_SNOW] = function()
+                    djui_hud_set_adjusted_color(255, 255, 255, 220)
+                end,
+                [FLOOD_WASTE] = function()
+                    djui_hud_set_adjusted_color(74, 123, 0, 220)
+                end,
+                [FLOOD_DESERT] = function()
+                    djui_hud_set_adjusted_color(254, 193, 121, 230)
+                end,
+                [FLOOD_ACID] = function()
+                    djui_hud_set_adjusted_color(0, 142, 36, 190)
+                end,
+                [FLOOD_POISON] = function()
+                    djui_hud_set_adjusted_color(174, 0, 255, 190)
+                end,
+                [FLOOD_SUNSET] = function()
+                    djui_hud_set_adjusted_color(235, 164, 0, 200)
+                end,
+                [FLOOD_FROSTBITE] = function()
+                    djui_hud_set_adjusted_color(126, 197, 249, 200)
+                end,
+                [FLOOD_CLOUDS] = function()
+                    djui_hud_set_adjusted_color(255, 255, 255, 200)
+                end,
+                [FLOOD_RAINBOW] = function()
+                    djui_hud_set_adjusted_color(244, 140, 253, 230)
+                end,
+                [FLOOD_DARKNESS] = function()
+                    djui_hud_set_adjusted_color(0, 0, 0, 200)
+                end,
+                [FLOOD_MAGMA] = function()
+                    djui_hud_set_adjusted_color(237, 0, 0, 220)
+                end,
+                [FLOOD_SULFUR] = function()
+                    djui_hud_set_adjusted_color(0, 20, 167, 220)
+                end,
+                [FLOOD_COTTON] = function()
+                    djui_hud_set_adjusted_color(255, 181, 225, 220)
+                end,
+                [FLOOD_MOLTEN] = function()
+                    djui_hud_set_adjusted_color(225, 106, 19, 220)
+                end,
+                [FLOOD_OIL] = function()
+                    djui_hud_set_adjusted_color(0, 0, 0, 200)
+                end,
+                [FLOOD_MATRIX] = function()
+                    djui_hud_set_adjusted_color(16, 71, 0, 200)
+                end,
+                [FLOOD_BUP] = function()
+                    djui_hud_set_adjusted_color(254, 193, 121, 200)
+                end,
+                [FLOOD_TIDE] = function()
+                    djui_hud_set_adjusted_color(15, 122, 211, 200)
+                end,
+                [FLOOD_DARKTIDE] = function()
+                    djui_hud_set_adjusted_color(15, 75, 124, 200)
+                end,
+                [FLOOD_VOLCANO] = function()
+                    djui_hud_set_adjusted_color(252, 30, 30, 200)
+                end,
+                [FLOOD_REDTIDE] = function()
+                    djui_hud_set_adjusted_color(211, 12, 35, 200)
+                end,
+                [FLOOD_OPTIC] = function()
+                    djui_hud_set_adjusted_color(146, 0, 132, 200)
+                end,
             })
             djui_hud_render_rect(0, 0, djui_hud_get_screen_width(), djui_hud_get_screen_height())
             set_lighting_dir(1,128)
@@ -575,9 +577,18 @@ local function on_hud_render()
 
             djui_hud_set_adjusted_color(255, 255, 255, 145)
             
-            if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-                djui_hud_render_texture_interpolated(TEX_GEO_TAG, flagIconPrevPos.x - 8, flagIconPrevPos.y - 8, 0.15, 0.15, dX - 8, dY - 8, 0.15, 0.15)
-            end
+		if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
+		local m = gMarioStates[0]
+		if math.abs(m.forwardVel) > 1.0 then
+				geoTagRotation = geoTagRotation + 0x400
+			end
+
+			djui_hud_set_rotation(geoTagRotation, 0.5, 0.5)
+
+			djui_hud_render_texture_interpolated(TEX_GEO_TAG, flagIconPrevPos.x - 8, flagIconPrevPos.y - 8, 1.10, 1.10, dX - 8, dY - 8, 1.10, 1.10)
+    
+			djui_hud_set_rotation(0, 0, 0)
+		end
 
             djui_hud_set_adjusted_color(255, 255, 255, 255)
 
@@ -585,42 +596,62 @@ local function on_hud_render()
             flagIconPrevPos.y = dY
         end
 
-        local text = if_then_else(gGlobalSyncTable.roundState == ROUND_STATE_INACTIVE, 'Type "/flood start" or press [Start] + [A]', "0.000s" .. get_modifiers_string())
+        local text = if_then_else(gGlobalSyncTable.roundState == ROUND_STATE_INACTIVE, "Type /flood start, or start from the pause menu", "0,000 sec" .. get_modifiers_string())
         if gNetworkPlayers[0].currAreaSyncValid then
             if gGlobalSyncTable.roundState == ROUND_STATE_INACTIVE then
                 if gGlobalSyncTable.mapMode == 2 then
                     if network_player_connected_count() > 1 then
-                        text = if_then_else(network_player_connected_count() > 1, "Voting in " .. tostring(math_floor(gGlobalSyncTable.timer / 30)), 'Type "/flood start" or press [Start] + [A]') -- quien usa esta vaina q es inutil
+                        text = if_then_else(network_player_connected_count() > 1, "Voting in " .. tostring(math_floor(gGlobalSyncTable.timer / 30)), "Type /flood start, or start from the pause menu")
                     end
                 else
-                    text = if_then_else(network_player_connected_count() > 1, "Starts in " .. tostring(math_floor(gGlobalSyncTable.timer / 40)), 'Type "/flood start" or press [Start] + [A]')
+                    text = if_then_else(network_player_connected_count() > 1, "The round begins in " .. tostring(math_floor(gGlobalSyncTable.timer / 40)), "Type /flood start, or start from the pause menu")
                 end
             elseif gGlobalSyncTable.roundState == ROUND_STATE_END then
-                text = "Ending"
-                text = if_then_else(network_player_connected_count() > 1, "Countdown will begin", 'End1ng')
+                text = "The countdown starts soon"
+                text = if_then_else(network_player_connected_count() > 1, "The countdown starts soon", 'Round Completed')
             elseif gNetworkPlayers[0].currLevelNum == gLevels[gGlobalSyncTable.level].level then
-                text = tostring(string.format("%.3f", gPlayerSyncTable[0].time / 30)) .. "s" .. get_modifiers_string()
+                text = tostring(string.format("%.2f", gPlayerSyncTable[0].time / 30)) .. " sec" .. get_modifiers_string()
             end
         end
 
-        local scale = 1
+-- Credit's JCM-Corlg! -- Garcias Vro
+        local scale = 0.672
         local width = djui_hud_measure_text(text) * scale
         local x = (djui_hud_get_screen_width() - width) * 0.5
 
-        djui_hud_set_adjusted_color(20, 0, 0, 128)
-        djui_hud_render_rect(x - 6, 0, width + 12, 16)
+        djui_hud_set_adjusted_color(303, 0, 33, 84)
+        djui_hud_render_rect(x - 6, 220, width + 12, 16)
         djui_hud_set_adjusted_color(255, 255, 255, 255)
-        djui_hud_print_text(text, x, 0, scale)
+        djui_hud_print_text(text, x, 222, scale)
 
-        hud_render_power_meter(gMarioStates[0].health, djui_hud_get_screen_width() - 64, 0, 64, 64)
+        shakeOffsetX = 0
+        shakeOffsetY = 0
+        if shakeTimer > 0 then
+            local currentIntensity = SHAKE_INTENSITY_HIT
+            
+            if gMarioStates[0].health <= 0x200 then
+                currentIntensity = SHAKE_INTENSITY_LOW
+            end
+
+            shakeOffsetX = math.random(-currentIntensity, currentIntensity)
+            shakeOffsetY = math.random(-currentIntensity, currentIntensity)
+            
+            if gMarioStates[0].health > 0x200 then
+                shakeTimer = shakeTimer - 1
+            end
+        end
+
+		if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE and gMarioStates[0].health > 0xFF and not gPlayerSyncTable[0].finished and gMarioStates[0].action ~= ACT_FOLLOW_SPECTATOR then
+			hud_render_power_meter(gMarioStates[0].health, (djui_hud_get_screen_width() - 64) + shakeOffsetX, 0 + shakeOffsetY, 64, 64)
+		end
 
         if gGlobalSyncTable.speedMultiplier ~= 1 then
             local speedtex = string.format("%.2fx", gGlobalSyncTable.speedMultiplier)
             local widthtex2 = djui_hud_measure_text(speedtex) * 0.25
-            djui_hud_set_adjusted_color(0, 0, 0, 128)
-            djui_hud_render_rect((djui_hud_get_screen_width() * 0.5) - widthtex2, 16, widthtex2 + 11, 8)
+            djui_hud_set_adjusted_color(303, 0, 33, 84)
+            djui_hud_render_rect((djui_hud_get_screen_width() * 0.5) - widthtex2, 0, widthtex2 + 11, 8)
             djui_hud_set_adjusted_color(255, 255, 255, 255)
-            djui_hud_print_text(speedtex, (djui_hud_get_screen_width() * 0.5 - (widthtex2 - 2)), 16, 0.5)
+            djui_hud_print_text(speedtex, (djui_hud_get_screen_width() * 0.5 - (widthtex2 - 2)), 0, 0.4)
         end
 
         if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
@@ -631,20 +662,24 @@ local function on_hud_render()
             textlv2 = " "
 	    end
 
+        if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE and not eFloodVariables.hudHide then
         djui_hud_set_resolution(RESOLUTION_N64);
         djui_hud_set_font(eFloodVariables.globalFont)
         if gGlobalSyncTable.modif_coinless or gGlobalSyncTable.modif_daredevil or gGlobalSyncTable.modif_trollface or gGlobalSyncTable.modif_slide_jump 
         or gGlobalSyncTable.modif_quicksand or gGlobalSyncTable.modif_gravity or gGlobalSyncTable.modif_auto_doors or gGlobalSyncTable.modif_pvp == true then
             djui_hud_print_text("Modifiers: " ..table.concat(modifiersfe, ", "), 3.5, 230, eFloodVariables.textlv2Scale)	
 		end
-        if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE and not eFloodVariables.hudHide then
             djui_hud_print_text(textlv1, 16, 8, eFloodVariables.textlv1Scale)
             djui_hud_set_adjusted_color(255, 255, 255, 255)
-            djui_hud_print_text("By", 16, 18, eFloodVariables.textlv2Scale)
+            djui_hud_print_text("By:", 16, 18, eFloodVariables.textlv2Scale)
+			djui_hud_set_adjusted_color(255, 255, 255, 255)
+			-- cho!
+			djui_hud_set_adjusted_color(255, 255, 0, 255)
+            djui_hud_print_text("cho!", 51, 18, eFloodVariables.textlv2Scale)
             switch(gLevels[gGlobalSyncTable.level].author, authorColors)
 
             if textlv2 then
-                djui_hud_print_text("    " .. textlv2, 16, 18, eFloodVariables.textlv2Scale)
+                djui_hud_print_text("    " .. textlv2, 20, 18, eFloodVariables.textlv2Scale)
             end
             djui_hud_set_adjusted_color(255, 255, 255, 255)
         end
@@ -660,7 +695,7 @@ local function on_hud_render()
         djui_hud_print_text("=", 37, 204, 1) djui_hud_print_text(tostring(math.ceil(m.capTimer/30)), 53, 204, 1)
     end
 	if (m.flags & MARIO_VANISH_CAP) ~= 0 and (m.flags & MARIO_WING_CAP) ~= 0 then
-		djui_hud_render_texture(wvcap, 21, 204, 1, 1)
+         djui_hud_render_texture(metal, 21, 204, 1, 1)
     elseif(m.flags & (MARIO_VANISH_CAP)) ~= 0 then
         djui_hud_render_texture(vanish, 21, 204, 1, 1)
     elseif (m.flags & (MARIO_WING_CAP)) ~= 0 then
@@ -686,11 +721,11 @@ local function on_speed_command(msg)
 
     if not moveset then
         if speed ~= nil then
-            speed = clampf(speed, -0.5, 1.5)
+            speed = clampf(speed, -0.1, 100)
             gGlobalSyncTable.speedMultiplier = speed
 
             if gGlobalSyncTable.popups == true then
-                djui_popup_create_global("to " .. speed .. "x", 1)
+                djui_popup_create_global("Speed to " .. speed .. "x", 1)
             end
 
             return true
@@ -759,10 +794,6 @@ local function on_level_init()
 
         local m = gMarioStates[0]
 
-        if table.contains(modifiersfe, "Troll") == true then
-            trollface = spawn_non_sync_object(id_bhvTrollface, E_MODEL_TROLLFACE, m.pos.x, m.pos.y + 800, m.pos.z, nil)
-        end
-
         if gNetworkPlayers[0].currLevelNum == LEVEL_SA then
             spawn_non_sync_object(
                 id_bhvCustomStaticObject,
@@ -782,7 +813,7 @@ local function on_level_init()
     local pos = gLevels[gGlobalSyncTable.level].goalPos
     if pos == nil then return end
     if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-        if gNetworkPlayers[0].currLevelNum == LEVEL_ZEROLIFE then
+        if gNetworkPlayers[0].currLevelNum == LEVEL_SA then
             spawn_non_sync_object(
                 id_bhvFinalStar,
                 E_MODEL_STAR,
@@ -867,6 +898,7 @@ local function on_warp()
         end
     end
 end 
+
 ---@param m MarioState
 local function on_player_connected(m)
     if network_is_server()
@@ -945,24 +977,8 @@ local function on_time_command(msg)
 end
 
 local function on_modifiers_switch(msg)
-    msg = msg:lower()
-    if msg == "nocoin" then
-        if table.contains(modifiersfe, "nocoin") == false then
-            table.insert(modifiersfe, "No Coin")
-
-            if gGlobalSyncTable.popups == true then
-                djui_popup_create_global("No Coins Mod applied.", 1)
-            end
-            gGlobalSyncTable.modif_coinless = true
-        else
-            local pos = table.poselement(modifiersfe, "No Coin")
-            table.remove(modifiersfe, pos)
-            if gGlobalSyncTable.popups == true then
-                djui_popup_create_global("No Coins Mod removed.", 1)
-            end
-            gGlobalSyncTable.modif_coinless = false
-        end		
-    elseif msg == "devil" then
+    msg = msg:lower()	
+    if msg == "devil" then
         if table.contains(modifiersfe, "Devil") == false then
             table.insert(modifiersfe, "Devil")
 
@@ -977,38 +993,6 @@ local function on_modifiers_switch(msg)
                 djui_popup_create_global("Devil Mod removed.", 1)
             end
             gGlobalSyncTable.modif_daredevil = false
-        end		
-    elseif msg == "gravity" then
-        if table.contains(modifiersfe, "Gravity") == false then
-            table.insert(modifiersfe, "Gravity")
-
-            if gGlobalSyncTable.popups == true then
-                djui_popup_create_global("Gravity Mod applied.", 1)
-            end
-            gGlobalSyncTable.modif_gravity = true
-        else
-            local pos = table.poselement(modifiersfe, "Gravity")
-            table.remove(modifiersfe, pos)
-            if gGlobalSyncTable.popups == true then
-                djui_popup_create_global("Gravity Modremoved.", 1)
-            end
-            gGlobalSyncTable.modif_gravity = false
-        end				
-    elseif msg == "slide-jump" then
-        if table.contains(modifiersfe, "Slide-Jump") == false then
-            table.insert(modifiersfe, "Slide-Jump")
-
-            if gGlobalSyncTable.popups == true then
-                djui_popup_create_global("Slide-Jump Mod applied.", 1)
-            end
-            gGlobalSyncTable.modif_slide_jump = true
-        else
-            local pos = table.poselement(modifiersfe, "Slide-Jump")
-            table.remove(modifiersfe, pos)
-            if gGlobalSyncTable.popups == true then
-                djui_popup_create_global("Slide-Jump Mod removed.", 1)
-            end
-            gGlobalSyncTable.modif_slide_jump = false
         end				
     elseif msg == "pvp" then
         if table.contains(modifiersfe, "PvP") == false then
@@ -1025,45 +1009,11 @@ local function on_modifiers_switch(msg)
                 djui_popup_create_global("PvP Mod removed.", 1)
             end
             gGlobalSyncTable.modif_pvp = false
-        end					
-    elseif msg == "troll" then
-        if table.contains(modifiersfe, "Troll") == false then
-            table.insert(modifiersfe, "Troll")
-
-            if gGlobalSyncTable.popups == true then
-                djui_popup_create_global("Troll Mod applied.", 1)
-            end
-            gGlobalSyncTable.modif_trollface = true
-        else
-            if not moveset then
-                local pos = table.poselement(modifiersfe, "Troll")
-                table.remove(modifiersfe, pos)
-                if gGlobalSyncTable.popups == true then
-                    djui_popup_create_global("Troll Mod removed.", 1)
-                end
-                gGlobalSyncTable.modif_trollface = false
-            elseif moveset then
-                if gGlobalSyncTable.popups == true then
-                    djui_popup_create_global("Disable the current moveset to remove Troll Mod.", 1)
-                end
-            end
         end
     else
-        djui_chat_message_create("/flood \\#650000\\mods \\#bb0000\\[troll|devil|nocoin|slide-jump|gravity|pvp]")
+        djui_chat_message_create("/flood \\#650000\\modifiers \\#bb0000\\[devil|pvp]")
     end
     return true
-end
-
-local function on_classic_command(msg)
-    msg = msg:lower()
-    if msg == "change" then
-        eFloodVariables.classic = not eFloodVariables.classic
-        djui_popup_create_global("Changed Fex mode!", 1)
-        return true
-    else
-        djui_chat_message_create("/flood \\#650000\\og \\#bb0000\\[change]\\#ffffff\\ Turns Fex into a classic mode")
-        return true
-    end
 end
 
 local function on_mode_switch(msg)
@@ -1088,59 +1038,9 @@ local function on_mode_switch(msg)
             djui_chat_message_create("Already set to random.")
         end
         gGlobalSyncTable.mapMode = 1
-    elseif msg == "voting" then
-        if gGlobalSyncTable.mapMode ~= 2 then
-            djui_chat_message_create("Mode will be applied once it starts.")
-            if gGlobalSyncTable.popups == true then
-                djui_popup_create_global("Mode set to Voting.", 1)
-            end
-        else
-            djui_chat_message_create("Already set to voting.")
-        end
-        gGlobalSyncTable.mapMode = 2
     else
         djui_chat_message_create("/flood \\#650000\\mode \\#bb0000\\[default|random]")
     end
-    return true
-end
-
-local function on_font_command(msg)
-    msg = msg:lower()
-    if msg == "menu" then
-        eFloodVariables.globalFont = FONT_MENU
-		eFloodVariables.textlv1Scale = 0.2
-		eFloodVariables.textlv2Scale = 0.15
-    elseif msg == "hud" then
-        eFloodVariables.globalFont = FONT_HUD
-		eFloodVariables.textlv1Scale = 0.55
-		eFloodVariables.textlv2Scale = 0.4
-    elseif msg == "normal" then
-        eFloodVariables.globalFont = FONT_NORMAL
-		eFloodVariables.textlv1Scale = 0.4
-		eFloodVariables.textlv2Scale = 0.3
-    elseif msg == "tiny" then
-        eFloodVariables.globalFont = FONT_TINY
-		eFloodVariables.textlv1Scale = 0.6
-		eFloodVariables.textlv2Scale = 0.4
-    elseif msg == "aliased" then 
-        eFloodVariables.globalFont = FONT_ALIASED
-        eFloodVariables.textlv1Scale = 0.4
-        eFloodVariables.textlv2Scale = 0.25
-    elseif msg == "special" then 
-        eFloodVariables.globalFont = FONT_SPECIAL
-        eFloodVariables.textlv1Scale = 0.4
-        eFloodVariables.textlv2Scale = 0.3
-    elseif msg == "vintage" then 
-        eFloodVariables.globalFont = FONT_RECOLOR_HUD
-        eFloodVariables.textlv1Scale = 0.55
-        eFloodVariables.textlv2Scale = 0.4
-    elseif msg == "color" then 
-        eFloodVariables.globalFont = FONT_CUSTOM_HUD
-        eFloodVariables.textlv1Scale = 0.55
-        eFloodVariables.textlv2Scale = 0.4
-    else
-        djui_chat_message_create("/flood\\#650000\\ font \\#bb0000\\[hud|normal|menu|tiny|aliased|special|vintage|color]")
-	end
     return true
 end
 
@@ -1184,9 +1084,30 @@ local function spectator_command(msg)
     return true
 end
 
-local function on_fex_command()
+local function on_fd_command()
     showSettings = not showSettings
     play_sound(SOUND_MENU_PAUSE, gMarioStates[0].pos)
+    return true
+end
+
+local function on_lobby_change_command(msg)
+    if msg == "" or msg == nil then
+        djui_chat_message_create("Uso: /flood lobby [nombre]. Disponibles: zerolife, castle, courtyard, bowser-1, bowser-2, bowser-3")
+        return true
+    end
+
+    local selectedLobby = LOBBY_MAPS[msg:lower()]
+
+    if selectedLobby then
+        gGlobalSyncTable.currentLobby = selectedLobby
+        djui_chat_message_create("Lobby cambiado a: \\#ffff00\\" .. msg:upper())
+        
+        if gGlobalSyncTable.roundState ~= ROUND_STATE_ACTIVE then
+            network_send(true, { restart = true })
+        end
+    else
+        djui_chat_message_create("\\#ff0000\\Mapa de lobby no válido.")
+    end
     return true
 end
 
@@ -1209,19 +1130,18 @@ local function on_flood_command(msg)
             return on_mode_switch(args[2] or "")
         elseif args[1] == "mods" then
             return on_modifiers_switch(args[2] or "")
-        elseif args[1] == "font" then
-            return on_font_command(args[2] or "")
         elseif args[1] == "time" then
             return on_time_command(args[2])
         elseif args[1] == "menu" then
-            return on_fex_command()
-        elseif args[1] == "og" then
-            return on_classic_command(args[2] or "")
+            return on_fd_command()
+		elseif args[1] == "lobby" then
+            return on_lobby_change_command(args[2] or "")
         end
 
-		on_fex_command()
+        djui_chat_message_create("/flood \\#650000\\[start|speed|time|mode|mods|hide|score|info|menu|spect|lobby]")
         return true
     else
+        djui_chat_message_create("Commands are disabled!")
     end
 end
 
@@ -1240,9 +1160,10 @@ local function on_flood_baby_command(msg)
             return on_font_command(args[2] or "")	
         end
 
-		on_fex_command()
+        djui_chat_message_create("/flood \\#650000\\[info|score|hide|spect]")
         return true
     else
+        djui_chat_message_create("Commands are disabled!")
     end
 end
 
@@ -1257,6 +1178,7 @@ local function coin_update(m, o, interactType)
 end
 
 hud_hide()
+set_ttc_speed_setting(TTC_SPEED_FAST)
 
 hook_event(HOOK_ON_INTERACT, coin_update)
 hook_event(HOOK_UPDATE, update)
@@ -1269,11 +1191,12 @@ hook_event(HOOK_BEFORE_PHYS_STEP, before_phys_step)
 hook_event(HOOK_ON_DIALOG, function () return false end)
 
 if not network_is_server() and not network_is_moderator() then
-    hook_chat_command("flood", "\\#650000\\[info|score|hide|font|spect]", on_flood_baby_command)
+    hook_chat_command("flood", "\\#650000\\[info|score|hide|spect]", on_flood_baby_command)
 end
 
 if network_is_server() or network_is_moderator() then
-    hook_chat_command("flood", "\\#650000\\[start|speed|time|mode|mods|og|hide|score|info|font|menu|spect]", on_flood_command)
+    hook_chat_command("flood", "\\#650000\\[start|speed|time|mode|mods|hide|score|info|menu|spect|lobby]", on_flood_command)
 end
-hook_chat_command("menu", "flood menu", on_fex_command)
+hook_chat_command("menu", "flood menu", on_fd_command)
+
 
