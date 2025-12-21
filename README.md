@@ -8,7 +8,6 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 ## Credits
 
 * zPancho!: Flood DEMON
-* Erik: Flood Extreme
 * DT Ryan: Flood Nightmare
 * birdekek: Flood Expanded
 * Agent X: Flood
@@ -17,7 +16,6 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 
 * SuperRodrigo0: Lobby Map
 * Blocky.cmd: Pause Menu
-* Erik: Developer
 
 ## Testers
 
