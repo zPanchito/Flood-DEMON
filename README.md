@@ -8,8 +8,8 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 ## Credits
 
 * zPancho!: Flood DEMON
-* Erik: Flood Nightmare
-* DT Ryan: Flood Extreme
+* Erik: Flood Extreme
+* DT Ryan: Flood Nightmare
 * birdekek: Flood Expanded
 * Agent X: Flood
 
