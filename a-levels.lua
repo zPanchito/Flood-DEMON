@@ -46,7 +46,6 @@ game = GAME_VANILLA
 --- @field public type integer
 --- @field public time integer
 --- @field public startPos Vec3f
---- @field public floodScale number
 --- @field public unwantedBhvs table
 --- @field public overrideName string
 --- @field public overrideWater boolean
@@ -102,7 +101,7 @@ local function flood_load_vanilla_levels()
             goalPos = { x =   2571,   y =  13715,   z =  -286,   a =  0x0000  },
             speed = 3.1,
             area = 1,
-            levelName = "Chain's Fortress Hell [1]",
+            levelName = "Chain's Fortress Hell",
             author = "zPan",
             type = FLOOD_POISON,
             sky = BACKGROUND_PURPLE_SKY,
@@ -113,17 +112,16 @@ local function flood_load_vanilla_levels()
         {
             level = LEVEL_WF,
             codeName = "wf-2",
-            goalPos = { x =   3959,   y =  4521,   z =  130,   a =  0x0000  },
-            speed = 7.12,
+            goalPos = { x =   -519,   y =  6765,   z =  1864,   a =  0x0000  },
+            speed = 6.1,
             area = 1,
-            levelName = "Chain's Fortress Hell [2]",
+            levelName = "The Chomp Challenge",
             author = "zPan",
             type = FLOOD_POISON,
             sky = BACKGROUND_PURPLE_SKY,
 			noWater = true,
             customStartPos = { x =   -3144,   y =  3033,   z =  -1351,   a =  0x0000  },
-            blocks = { x = -2480, y = 1744, z = -258, a = 0x0000 },
-			floodHeight = -1490
+			floodHeight = -3406
         },
         {
             level = LEVEL_WF,
@@ -131,7 +129,7 @@ local function flood_load_vanilla_levels()
             goalPos = { x =   356,   y =  2286,   z =  3716,   a =  -0x4000  },
             speed = 8.3,
             area = 1,
-            levelName = "Chain's Fortress Hell [3]",
+            levelName = "The escape of the enraged chomps",
             author = "zPan",
             type = FLOOD_POISON,
             sky = BACKGROUND_PURPLE_SKY,
@@ -142,7 +140,7 @@ local function flood_load_vanilla_levels()
         {
             level = LEVEL_JRB,
             codeName = "jrb",
-            goalPos = { x =   6055,   y =   2593,   z =   2545,   a =  0x0000},
+            goalPos = { x =   4335,   y =   4607,   z =   3090,   a =  0x0000},
             speed = 3,
             area = 1,
             levelName = "JRB's Great Drought",
@@ -155,9 +153,9 @@ local function flood_load_vanilla_levels()
         },
         {
             level = LEVEL_JRB,
-            codeName = "jrb",
-            goalPos = { x =   6055,   y =   2593,   z =   2545,   a =  0x0000},
-            speed = 3,
+            codeName = "jrb-2",
+            goalPos = { x =   1501,   y =   1946,   z =   2369,   a =  -0x2000},
+            speed = 6.5,
             area = 1,
             levelName = "JRB's caverns",
             author = "zPan",
@@ -195,10 +193,10 @@ local function flood_load_vanilla_levels()
         {
             level = LEVEL_BBH,
             codeName = "bbh",
-            goalPos = { x =   1674,   y =   5784,   z =   2507,   a = -0x4000  },
+            goalPos = { x =   980,   y =   5259,   z =   1764,   a = -0x4000  },
             speed = 1,
             area = 1,
-            levelName = "Long Jump Mansion",
+            levelName = "The mansion's long jumps",
             author = "zPan",
             type = FLOOD_POISON,
 			sky = BACKGROUND_PURPLE_SKY,
@@ -210,7 +208,7 @@ local function flood_load_vanilla_levels()
             goalPos = { x =   4104,   y =   3951,   z =   4101,   a =  0x2000  },
             speed = 5,
             area = 1,
-            levelName = "Deadly Towers",
+            levelName = "The cursed towers",
             author = "zPan",
             type = FLOOD_POISON,
             sky = BACKGROUND_PURPLE_SKY,
@@ -222,7 +220,7 @@ local function flood_load_vanilla_levels()
             goalPos = { x =   6013,   y =   7182,   z =  -4181,   a =  0x6000  },
             speed = 6.5,
             area = 1,
-            levelName = "Secret Slide of the Chuckay's",
+            levelName = "The hideout of the Chuckay's",
             author = "zPan",
             type = FLOOD_POISON,
             customStartPos = { x =  -4763, y = -3057, z = -2985, a = -0x6000 },
@@ -236,7 +234,6 @@ local function flood_load_vanilla_levels()
             levelName = "Bowser in the heaven of suffering",
             author = "zPan",
             type = FLOOD_POISON,
-			floodScale = 0.7,
             sky = BACKGROUND_PURPLE_SKY,
             customStartPos = nil,
         },
@@ -246,7 +243,7 @@ local function flood_load_vanilla_levels()
             goalPos = { x =  -2712,   y =   1843,   z =  -6406,   a = -0x0000  },
             speed = 1.2,
             area = 1,
-            levelName = "Underground Volcano [1]",
+            levelName = "Underground Volcano",
             author = "zPan",
             type = FLOOD_POISON,
 			sky = BACKGROUND_PURPLE_SKY,
@@ -259,12 +256,12 @@ local function flood_load_vanilla_levels()
             goalPos = { x =  3027,   y =   1426,   z =  6294,   a = -0x0000  },
             speed = 2.4,
             area = 1,
-            levelName = "Underground Volcano [2]",
+            levelName = "The challenge of the burning volcano",
             author = "zPan",
             type = FLOOD_POISON,
 			sky = BACKGROUND_PURPLE_SKY,
 			noWater = true,
-			floodHeight = -8412,
+			floodHeight = -6000,
             customStartPos = { x =  4245, y = -3247, z = 3930,   a = -0x2000 },
         },
         {
@@ -361,7 +358,7 @@ local function flood_load_vanilla_levels()
             goalPos = { x =  -2660,   y =   11518,   z =   -161,   a =  0x0000  },
             speed = 3.4,
             area = 1,
-            levelName = "Bowser Underground",
+            levelName = "Bowser in the fiery hell",
             author = "zPan",
             type = FLOOD_POISON,
 			sky = BACKGROUND_PURPLE_SKY,
@@ -401,7 +398,7 @@ local function flood_load_vanilla_levels()
             codeName = "sl-igloo",
             goalPos = { x =     -5,   y =      0,   z =   2575,   a =  0x8000  },
             containsbase = true,
-            speed = 4,
+            speed = 6.3,
             area = 2,
             levelName = "Hellish Snow Igloo",
             author = "zPan",
@@ -421,20 +418,6 @@ local function flood_load_vanilla_levels()
             sky = BACKGROUND_PURPLE_SKY,
 			noWater = true,
             customStartPos = nil,
-        },
-        {
-            level = LEVEL_WDW,
-            codeName = "wdw-2",
-            goalPos = { x =   2254,   y =   -1279,   z =   2242,   a = 0x0000  },
-            speed = 4,
-            area = 1,
-            levelName = "The secret basement of Wet Dry World",
-            author = "zPan",
-            type = FLOOD_POISON,
-			noWater = true,
-            customStartPos = { x =   -806,   y =   -1080,   z =   -3290,   a = -0x4000  },
-			spawnArea = true,
-			floodHeight = -4501
         },
         {
             level = LEVEL_TTM,
@@ -496,7 +479,6 @@ local function flood_load_vanilla_levels()
             levelName = "Tick Tock Wallkick's",
             author = "zPan",
             type = FLOOD_POISON,
-			floodScale = 0.2,
             customStartPos = nil,
         },
         {
@@ -554,5 +536,3 @@ if game == GAME_VANILLA and not unsupported then
 end
 
 FLOOD_LEVEL_COUNT = #gLevels
-
-

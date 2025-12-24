@@ -1,4 +1,5 @@
--- エリック
+local math_floor,is_player_active,table_insert,is_game_paused,djui_hud_set_color = math.floor,is_player_active,table.insert,is_game_paused,djui_hud_set_color
+
 moveset = false
 cheats = false
 
@@ -37,29 +38,6 @@ function hex_valid(hex)
 		if tonumber(hexCode) == nil then return false end
 	end
 	return true
-end
-
-function wrap_text(text, maxLength)
-    local lines = {}
-    local line = ""
-	-- find whitespace/space character
-    for word in text:gmatch("%S+") do
-		-- if the length of our word plus the line length is less
-		-- than the max length, the continue
-        if #line + #word < maxLength then
-            line = line .. word .. " "
-        else
-			-- otherwise insert a line
-            table.insert(lines, line)
-            line = word .. " "
-        end
-    end
-	-- just incase
-    if #line > 0 then
-        table.insert(lines, line)
-    end
-	-- return lines
-    return lines
 end
 
 rom_hack_cam_set_collisions(false)
@@ -192,15 +170,6 @@ function string_without_hex(name)
         end
     end
     return s
-end
-
--- Most useful function of 2024 created by EmeraldLockdown (Proved fact)
-function warp_to_flood_level(level, area, act)
-    if not warp_to_level(level, area, act) then
-        for i = 0, 250 do
-            if warp_to_warpnode(level, area, act, i) then break end
-        end
-    end
 end
 
 function on_or_off(value)

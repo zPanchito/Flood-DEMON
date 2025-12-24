@@ -273,13 +273,6 @@ local function reset_credit_entries()
     }
     local players = {
         {
-            name = "Erik",
-            categories = { DEV },
-            discord = "whatuwantfrman",
-            modsite = "Bomboclath048",
-            github = "Erik-Bomboclath"
-        },
-        {
             name = "Agent X",
             categories = { OG_FLOODS },
             discord = "AgentXLP",

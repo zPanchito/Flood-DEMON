@@ -38,12 +38,10 @@ smlua_audio_utils_replace_sequence(48,   0x25, 75,     "bitfs")
 -- Areas Levels
 smlua_audio_utils_replace_sequence(54,   0x2A, 75,     "lll-2")
 smlua_audio_utils_replace_sequence(50,     42, 75,     "ssl-2")
-smlua_audio_utils_replace_sequence(51,   0x2A, 75,     "wdw-2")
 smlua_audio_utils_replace_sequence(52,   0x2A, 75,     "sl-2")
-smlua_audio_utils_replace_sequence(53,   0x25, 75,     "wdw-2")
 
 local REPLACEMENTS = {
-    [LEVEL_CASTLE_GROUNDS]= {seq = 25}, -- Comentado para usar música random
+    [LEVEL_CASTLE_GROUNDS]= {seq = 25},
     [LEVEL_BOB]           = {seq = 26},
     [LEVEL_WF]            = {seq = 27},
     [LEVEL_JRB]           = {seq = 28},
@@ -87,9 +85,6 @@ local LOBBY_SEQUENCES = {11, 12, 13}
 local LOBBY_LEVELS = {
     [LEVEL_CASTLE] = true,
     [LEVEL_CASTLE_COURTYARD] = true,
-	[LEVEL_BOWSER_1] = true,
-	[LEVEL_BOWSER_2] = true,
-	[LEVEL_BOWSER_3] = true,
     [LEVEL_ZEROLIFE] = true  
 }
 
@@ -105,6 +100,3 @@ hook_event(HOOK_ON_WARP, function()
     play_random_lobby_music()
     update_level_music()
 end)
-
-
-

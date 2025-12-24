@@ -2,11 +2,8 @@ if unsupported then return end
 
 E_MODEL_FLOOD = smlua_model_util_get_id("flood_geo")
 E_MODEL_BASE = smlua_model_util_get_id("base_geo")
-E_MODEL_TROLLFACE = smlua_model_util_get_id("trollface_geo")
-E_MODEL_LAUNCHPAD = smlua_model_util_get_id("launchpad_geo")
 
 local COL_BASE = smlua_collision_util_get("base_collision")
-local COL_LAUNCHPAD = smlua_collision_util_get("launchpad_collision")
 local metalcapboost = 1
 local sleddirection = 1
 local set_override_far,cur_obj_scale,cur_obj_init_animation,bhv_pole_base_loop,nearest_mario_state_to_object,play_mario_jump_sound,set_mario_action,spawn_non_sync_object,mario_set_forward_vel,vec3f_set,load_object_collision_model,obj_mark_for_deletion,network_is_server,obj_check_hitbox_overlap,obj_has_behavior_id = set_override_far,cur_obj_scale,cur_obj_init_animation,bhv_pole_base_loop,nearest_mario_state_to_object,play_mario_jump_sound,set_mario_action,spawn_non_sync_object,mario_set_forward_vel,vec3f_set,load_object_collision_model,obj_mark_for_deletion,network_is_server,obj_check_hitbox_overlap,obj_has_behavior_id
@@ -361,148 +358,6 @@ local function bhv_block_init(o)
     end
 end
 
-local function bhv_block_loop()
-    load_object_collision_model()
-end
-
--- name: Custom Tint
-
-gGlobalSyncTable.tintR = 0
-gGlobalSyncTable.tintG = 0
-gGlobalSyncTable.tintB = 0
-gGlobalSyncTable.hostTint = false
-
-local tint = {r=255,g=255,b=255}
-local slotName = ""
-
-function split(str, sep)
-    local result = {}
-    for match in (str):gmatch(string.format("[^%s]+", sep or "\n")) do
-        table.insert(result, match)
-    end
-    return result
-end
-
-function tobool(value)
-    local v = {
-		["true"]=true, ["false"]=false,
-		["0"]=true, ["1"]=false,
-		["on"]=true, ["off"]=false,
-		["y"]=true, ["n"]=false,
-		["yes"]=true, ["no"]=false,
-	}
-	local result = false
-	if value == 1 then
-		result = true
-	elseif value == 0 then
-		result = false
-	else
-		result = v[value] or false
-	end
-    return result
-end
-
-local function set_tint(color)
-    set_lighting_color(0, color.r)
-    set_lighting_color(1, color.g)
-    set_lighting_color(2, color.b)
-    set_lighting_color_ambient(0, color.r)
-    set_lighting_color_ambient(1, color.g)
-    set_lighting_color_ambient(2, color.b)
-    set_vertex_color(0, color.r)
-    set_vertex_color(1, color.g)
-    set_vertex_color(2, color.b)
-    set_fog_color(0, color.r)
-    set_fog_color(1, color.g)
-    set_fog_color(2, color.b)
-    set_skybox_color(0, math.min(color.r+10,255))
-    set_skybox_color(1, math.min(color.g+10,255))
-    set_skybox_color(2, math.min(color.b+10,255))
-end
-
-local function update()
-	if gGlobalSyncTable.globalTint == true then
-	set_tint({
-		r = gGlobalSyncTable.tintR,
-		g = gGlobalSyncTable.tintG,
-		b = gGlobalSyncTable.tintB
-	})
-	else
-		set_tint(tint)
-	end
-	if network_is_server() then
-		gGlobalSyncTable.tintR = tint.r
-		gGlobalSyncTable.tintG = tint.g
-		gGlobalSyncTable.tintB = tint.b
-	end
-end
-
-function save_tint()
-	local key = "tint_"..slotName
-	local tintString = tostring(tint.r).."_"..tostring(tint.g).."_"..tostring(tint.b)
-	mod_storage_save(key, tintString)
-	if mod_storage_load("tint_"..slotName) ~= nil then
-		djui_popup_create("Tint '"..slotName.."' saved!", 1) 
-	else
-		djui_popup_create("Tint '"..slotName.."' couldn't be saved.\n\nHere is some possible reasons of it:\n- Script Error.\n- Name has characters that cannot be used.", 5)
-	end
-end
-
-function load_tint()
-	local key = "tint_"..slotName
-	local tintString = mod_storage_load(key)
-	if tintString == nil then
-		djui_popup_create("Tint '"..slotName.."' dosen't exists.", 1)
-		return
-	end
-	local table = split(tintString, "_")
-	if #table < 3 then
-		djui_popup_create("Tint '"..slotName.."' has wrong format.", 1)
-		return
-	end
-	tint.r = tonumber(table[1])
-	tint.g = tonumber(table[2])
-	tint.b = tonumber(table[3])
-	djui_popup_create("Tint '"..slotName.."' loaded!", 1)
-end
-
-if VERSION_NUMBER < 38 then
-	hook_chat_command("set-tint", " [red] [green] [blue]", function(msg)
-		local table = split(msg, " ")
-		tint.r = tonumber(table[1])
-		tint.g = tonumber(table[2])
-		tint.b = tonumber(table[3])
-		return true
-	end)
-	hook_chat_command("save-tint", " [name]", function(msg)
-		slotName = msg
-		save_tint()
-		return true
-	end)
-	hook_chat_command("load-tint", " [name]", function(msg)
-		slotName = msg
-		load_tint()
-		return true
-	end)
-	if network_is_server() then
-		hook_chat_command("force-host-tint", " [on|off]", function(msg)
-			gGlobalSyncTable.hostTint = tobool(msg)
-			return true
-		end)
-	end
-else
-	hook_mod_menu_slider("Red Component:", tint.r, 25, 255, function(_,v) tint.r = v end)
-	hook_mod_menu_slider("Green Component:", tint.g, 25, 255, function(_,v) tint.g = v end)
-	hook_mod_menu_slider("Blue Component:", tint.b, 25, 255, function(_,v) tint.b = v end)
-	if network_is_server() then
-		hook_mod_menu_checkbox("Force Host Tint", gGlobalSyncTable.hostTint, function(_,v) gGlobalSyncTable.hostTint = v end)
-	end
-	hook_mod_menu_inputbox("Slot Name", slotName, 128, function(_,v) slotName = v end)
-	hook_mod_menu_button("Save Tint", save_tint)
-	hook_mod_menu_button("Load Tint", load_tint)
-end
-hook_event(HOOK_UPDATE, update)
-
 hook_event(HOOK_UPDATE, water_check)
 hook_event(HOOK_ON_LEVEL_INIT, water_check)
 hook_event(HOOK_BEFORE_PHYS_STEP, before_phys_step)
@@ -512,4 +367,4 @@ hook_event(HOOK_ON_PAUSE_EXIT, on_pause_exit)
 hook_event(HOOK_ALLOW_HAZARD_SURFACE, allow_hazard_surface)
 hook_event(HOOK_ON_OBJECT_UNLOAD, on_object_unload)
 hook_event(HOOK_ON_PACKET_RECEIVE, on_packet_receive)
-hook_event(HOOK_BEFORE_PHYS_STEP, slide)
+hook_event(HOOK_BEFORE_PHYS_STEP, slide)	

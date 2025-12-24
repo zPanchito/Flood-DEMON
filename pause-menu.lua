@@ -1,6 +1,3 @@
--- No entiendo nada alvrg
--- COPIA DE FLOOD+ VAMOS A
-
 local zero = {x=0,y=0,z=0}
 local m = gMarioStates[0]
 local np = gNetworkPlayers[0]
@@ -351,7 +348,9 @@ local function hud_render()
         { text = "PAUSE",     font = FONT_HUD,     posX = screenWidth * 0.5 -  djui_hud_measure_text("PAUSE"),        posY = optionPosY - 80 },
         { text = textlv1,     font = FONT_TINY,    posX = screenWidth * 0.5 -  djui_hud_measure_text(textlv1) * 0.5,  posY = optionPosY - 40 },
 		{ text = gGlobalSyncTable.level .. "/" .. FLOOD_LEVEL_COUNT, font = FONT_TINY, posX = screenWidth * 0.5 - djui_hud_measure_text(gGlobalSyncTable.level .. "/" .. FLOOD_LEVEL_COUNT) * 0.5, posY = optionPosY + 90 },
-    }
+		
+	}
+		
 
     render_text(textPositions)
 
@@ -393,4 +392,3 @@ real_hook_event(HOOK_ON_HUD_RENDER, hud_render)
 real_hook_event(HOOK_BEFORE_MARIO_UPDATE, before_mario_update)
 real_hook_event(HOOK_ON_WARP, var_close)
 real_hook_event(HOOK_ON_LEVEL_INIT, function () restartLevelArea = gNetworkPlayers[0].currAreaIndex var_close() end)
-

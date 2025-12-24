@@ -1,32 +1,30 @@
--- name: Flood \\#900C3F\\DEMON! \\#dcdcdc\\[WIP]
+-- name: Flood \\#900C3F\\DEMON!
 -- ignore-script-warnings: true
 -- incompatible: gamemode
--- description: \\#dcdcdc\\F\\#900C3F\\DM!, \\#dcdcdc\\sequel to Flood Extreme (stop the floods!) created by \\#555555\\Erik\n\n\\\#00ff00\\zPan\\#ffff00\\cho!\\#dcdcdc\\: Flood \\#900C3F\\DEMON!\n\\\#555555\\Erik\\#dcdcdc\\: Flood \\#8B0000\\Extreme\n\\\#ff0000\\DT Ryan\\#dcdcdc\\: Flood \\#ff0000\\Nightmare\n\\\#7089b8\\birdekek\\#dcdcdc\\: Flood Expanded\n\\\#9b9b9b\\Agent \\#ec7731\\X\\#dcdcdc\\: Flood\n\n\-- Texters --\n\n\\\#ff00ac\\Cent24\n\\\#003e00\\Goku\n\\\#00b4ff\\JCM-\\#007cff\\Corlg!\n\n\\\#dcdcdc\\-- Thanks --\n\n\\\#ffff00\\Super\\#00a100\\Rodrigo0\\#dcdcdc\\: \\#dcdcdc\\Lobby Map\n\\\#555555\\Erik\\#dcdcdc\\: \\#dcdcdc\\Developer\n\Blo\\#0000ff\\cky\\#dcdcdc\\: \\#dcdcdc\\Pause Menu\n\n\-- Extras --\n\n\The pause menu is from Flood+ xd\n\2026!!!
+-- description: \\#dcdcdc\\F\\#900C3F\\DM!, \\#dcdcdc\\(stop the floods!) \n\n\\\#00ff00\\zPan\\#ffff00\\cho!\\#dcdcdc\\: Flood \\#900C3F\\DEMON!\n\\\#ff0000\\DT Ryan\\#dcdcdc\\: Flood \\#ff0000\\Nightmare\n\\\#7089b8\\birdekek\\#dcdcdc\\: Flood Expanded\n\\\#9b9b9b\\Agent \\#ec7731\\X\\#dcdcdc\\: Flood\n\n\-- Texters --\n\n\\\#ff00ac\\Cent24\n\\\#003e00\\Goku\n\\\#00b4ff\\JCM-\\#007cff\\Corlg!\n\n\\\#dcdcdc\\-- Thanks --\n\n\\\#ffff00\\Super\\#00a100\\Rodrigo0\\#dcdcdc\\: \\#dcdcdc\\Lobby Map\n\Blo\\#0000ff\\cky\\#dcdcdc\\: \\#dcdcdc\\Pause Menu\n\n\-- Extras --\n\n\The pause menu is from Flood+ xd\n\2026!!!
 if unsupported then return end
--- I'll Watch As You Bleed, For I Warned you and Warned you Did Not Heed It's Your Fault And Hers Too Why I Did What I Did It Was All For You AW SHUCKS
+-- Gracias por tanto :)
+-- Thank you for so much :)
 
 local network_player_connected_count,init_single_mario,warp_to_level,play_sound,network_get_player_text_color_string,djui_chat_message_create,disable_time_stop,network_player_set_description,set_mario_action,obj_get_first_with_behavior_id,obj_check_hitbox_overlap,spawn_mist_particles,vec3f_dist,play_race_fanfare,play_music,djui_hud_set_resolution,djui_hud_get_screen_height,djui_hud_get_screen_width,djui_hud_render_rect,djui_hud_set_font,djui_hud_world_pos_to_screen_pos,clampf,math_floor,djui_hud_measure_text,djui_hud_print_text,hud_render_power_meter,hud_get_value,save_file_erase_current_backup_save,save_file_set_flags,save_file_set_using_backup_slot,find_floor_height,spawn_non_sync_object,vec3f_set,vec3f_copy,math_random,set_ttc_speed_setting,get_level_name,hud_hide,smlua_text_utils_secret_star_replace,smlua_audio_utils_replace_sequence = network_player_connected_count,init_single_mario,warp_to_level,play_sound,network_get_player_text_color_string,djui_chat_message_create,disable_time_stop,network_player_set_description,set_mario_action,obj_get_first_with_behavior_id,obj_check_hitbox_overlap,spawn_mist_particles,vec3f_dist,play_race_fanfare,play_music,djui_hud_set_resolution,djui_hud_get_screen_height,djui_hud_get_screen_width,djui_hud_render_rect,djui_hud_set_font,djui_hud_world_pos_to_screen_pos,clampf,math.floor,djui_hud_measure_text,djui_hud_print_text,hud_render_power_meter,hud_get_value,save_file_erase_current_backup_save,save_file_set_flags,save_file_set_using_backup_slot,find_floor_height,spawn_non_sync_object,vec3f_set,vec3f_copy,math.random,set_ttc_speed_setting,get_level_name,hud_hide,smlua_text_utils_secret_star_replace,smlua_audio_utils_replace_sequence
 
-local LOBBY_MAPS = {
-    ["zerolife"] = LEVEL_ZEROLIFE,
-    ["bowser-1"] = LEVEL_BOWSER_1,
-    ["bowser-2"] = LEVEL_BOWSER_2,
-    ["bowser-3"] = LEVEL_BOWSER_3,
+local LOBBY_MAPS  = {
+    ["zerolife"]  = LEVEL_ZEROLIFE,
 	["courtyard"] = LEVEL_CASTLE_COURTYARD,
-	["castle"] = LEVEL_CASTLE
+	["castle"]    = LEVEL_CASTLE
 }
 
 ROUND_STATE_INACTIVE   = 0
 ROUND_STATE_ACTIVE     = 1
 ROUND_STATE_END        = 2
-ROUND_COOLDOWN         = 21 * 50 -- 11 seconds, the 11 should only be shown on 1 frame
+ROUND_COOLDOWN         = 21 * 50
 
 SPECTATOR_MODE_NORMAL  = 0
 SPECTATOR_MODE_FOLLOW  = 1
 
 TEX_GEO_TAG = get_texture_info("hitbox")
 
-local geoTagRotation = 0 -- Variable para guardar el ángulo de rotación
+local geoTagRotation = 0
 local previousHealth = 0x880
 local shakeTimer = 0
 local shakeOffsetX = 0
@@ -38,7 +36,7 @@ local globalTimer = 0
 local listedSurvivors = false
 local m = gMarioStates[0]
 
-version = "1.3"
+version = "1.3.1"
 targetPlayer = 0
 deathspawn = 0
 
@@ -320,7 +318,6 @@ local function update()
 
     if network_is_server() then server_update() end
 
-	-- Busca este bloque en la función update()
 	if gGlobalSyncTable.roundState ~= ROUND_STATE_ACTIVE then
 		if gNetworkPlayers[0].currLevelNum ~= gGlobalSyncTable.currentLobby or gNetworkPlayers[0].currActNum ~= 0 then
 			warp_to_level(gGlobalSyncTable.currentLobby, 1, 0)
@@ -433,16 +430,6 @@ local function mario_update(m)
                 gPlayerSyncTable[0].time = gPlayerSyncTable[0].time + 1
             end
         end
-
-    if gLevels[gGlobalSyncTable.level].surfaceKill ~= true then
-        if m.floor ~= nil and (m.floor.type == SURFACE_INSTANT_QUICKSAND or m.floor.type == SURFACE_INSTANT_MOVING_QUICKSAND) then
-            m.floor.type = SURFACE_BURNING
-        end
-    else
-        if m.floor.type == SURFACE_INSTANT_QUICKSAND then
-            m.floor.type = ACT_QUICKSAND_DEATH
-        end
-    end
 	
 	if (m.action == ACT_SPAWN_NO_SPIN_AIRBORNE or m.action == ACT_SPAWN_NO_SPIN_LANDING or m.action == ACT_SPAWN_SPIN_AIRBORNE or m.action == ACT_SPAWN_SPIN_LANDING) and m.pos.y < m.floorHeight + 10 then
         set_mario_action(m, ACT_FREEFALL, 0)
@@ -577,18 +564,25 @@ local function on_hud_render()
 
             djui_hud_set_adjusted_color(255, 255, 255, 145)
             
-		if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
-		local m = gMarioStates[0]
-		if math.abs(m.forwardVel) > 1.0 then
-				geoTagRotation = geoTagRotation + 0x400
-			end
+            if gGlobalSyncTable.roundState == ROUND_STATE_ACTIVE then
+                local m = gMarioStates[0]
+                
+                if math.abs(m.forwardVel) > 1.0 then
+                    geoTagRotation = geoTagRotation + 0x400
+                    
+                    local r = math.sin(globalTimer * 0.2) * 127 + 128
+                    local g = math.sin(globalTimer * 0.2 + 2.0) * 127 + 128
+                    local b = math.sin(globalTimer * 0.2 + 4.0) * 127 + 128
+                    
+                    djui_hud_set_adjusted_color(r, g, b, 255)
+                end
 
-			djui_hud_set_rotation(geoTagRotation, 0.5, 0.5)
+                djui_hud_set_rotation(geoTagRotation, 0.5, 0.5)
 
-			djui_hud_render_texture_interpolated(TEX_GEO_TAG, flagIconPrevPos.x - 8, flagIconPrevPos.y - 8, 1.10, 1.10, dX - 8, dY - 8, 1.10, 1.10)
-    
-			djui_hud_set_rotation(0, 0, 0)
-		end
+                djui_hud_render_texture_interpolated(TEX_GEO_TAG, flagIconPrevPos.x - 8, flagIconPrevPos.y - 8, 1.10, 1.10, dX - 8, dY - 8, 1.10, 1.10)
+        
+                djui_hud_set_rotation(0, 0, 0)
+            end
 
             djui_hud_set_adjusted_color(255, 255, 255, 255)
 
@@ -596,7 +590,7 @@ local function on_hud_render()
             flagIconPrevPos.y = dY
         end
 
-        local text = if_then_else(gGlobalSyncTable.roundState == ROUND_STATE_INACTIVE, "Type /flood start, or start from the pause menu", "0,000 sec" .. get_modifiers_string())
+        local text = if_then_else(gGlobalSyncTable.roundState == ROUND_STATE_INACTIVE, "Type /flood start, or start from the pause menu", "0,00 sec" .. get_modifiers_string())
         if gNetworkPlayers[0].currAreaSyncValid then
             if gGlobalSyncTable.roundState == ROUND_STATE_INACTIVE then
                 if gGlobalSyncTable.mapMode == 2 then
@@ -741,9 +735,6 @@ local function on_speed_command(msg)
 end
 
 local function on_info_command(msg)
-        djui_chat_message_create("Flood \\#8B0000\\DEMON!")
-        djui_chat_message_create("A reimagined version of !Flood \\#8B0000\\Extreme!")
-        djui_chat_message_create("Flood Extreme by: Bomboclath")
 		djui_chat_message_create("Flood DEMON! by: \\#00ff00\\zPan\\#ffff00\\cho!")
         djui_chat_message_create("Version:\\#8B0000\\ "..version)
         djui_chat_message_create("Total Levels:\\#8B0000\\ " .. FLOOD_LEVEL_COUNT)
@@ -1092,7 +1083,7 @@ end
 
 local function on_lobby_change_command(msg)
     if msg == "" or msg == nil then
-        djui_chat_message_create("Uso: /flood lobby [nombre]. Disponibles: zerolife, castle, courtyard, bowser-1, bowser-2, bowser-3")
+        djui_chat_message_create("Use: /flood lobby [name-lobby]. Available: zerolife, castle, courtyard")
         return true
     end
 
@@ -1106,7 +1097,7 @@ local function on_lobby_change_command(msg)
             network_send(true, { restart = true })
         end
     else
-        djui_chat_message_create("\\#ff0000\\Mapa de lobby no válido.")
+        djui_chat_message_create("\\#ff0000\\Invalid lobby map.")
     end
     return true
 end
@@ -1199,5 +1190,5 @@ if network_is_server() or network_is_moderator() then
 end
 hook_chat_command("menu", "flood menu", on_fd_command)
 
-
-
+-- Volvemos pronto!!!!
+-- We'll be back soon!!!!

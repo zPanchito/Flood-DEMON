@@ -1,4 +1,3 @@
--- エリック
 if unsupported then return end
 
 ACT_SPECTATOR = allocate_mario_action(ACT_GROUP_AIRBORNE | ACT_FLAG_INVULNERABLE)

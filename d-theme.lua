@@ -1,9 +1,3 @@
--- Full credit goes to EmeraldLockdown for this theme system found in Tag
--- エリック
-
----@param r integer|number
----@param g integer|number
----@param b integer|number
 local function color(r, g, b, a)
     if not a then a = 255 end
     return { r = r, g = g, b = b, a = a }

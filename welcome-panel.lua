@@ -9,17 +9,9 @@ TEX_ROUNDED_CORNER2 = get_texture_info("cornertr")
 TEX_ROUNDED_CORNER3 = get_texture_info("cornerbl")
 TEX_ROUNDED_CORNER4 = get_texture_info("cornerbr")
 
--- 1. Variables de tiempo y estado
 local animTimer = 0
-local animDuration = 25.0 -- Duración de la animación visual (aprox 2 seg)
-local interactionDelay = 120.0 -- 3 segundos (asumiendo 30 FPS constantes en SM64CoopDX)
+local animDuration = 60
 local switched = true
-
-local function easeOutBack(t)
-    local c1 = 1.3
-    local c3 = c1 + 1
-    return 1 + c3 * math.pow(t - 1, 3) + c1 * math.pow(t - 1, 2)
-end
 
 function displayrules(m)
     hostnum = network_local_index_from_global(0)
@@ -44,16 +36,10 @@ function displayrules(m)
             "Agent X", -400, -40, globalFont, 0.5, "#ec7731" -- 
         },
         {
-           ": Flood Extreme", -255, -110, globalFont, scale, color
+            ": Flood Nightmare", -210, -115, globalFont, scale, color
         },
         {
-            "Erik", -400, -110, globalFont, scale, "#555555"
-        },
-        {
-            ": Flood Nightmare", -210, -75, globalFont, scale, color
-        },
-        {
-            "DT] Ryan", -400, -75, globalFont, scale, "#ff3030"
+            "DT] Ryan", -400, -115, globalFont, scale, "#ff3030"
         },
         {
             ": Flood DEMON!", -210, -150, globalFont, scale, color
@@ -68,6 +54,12 @@ function displayrules(m)
 		    ": Lobby Map", -215, 20, globalFont, scale, color
         },
         {
+		    ": Flood Expanded", -215, -75, globalFont, scale, color -- 75
+        },
+        {
+		    "birdekek", -400, -75, globalFont, scale, "#7089b8"
+        },
+        {
             "SuperRodrigo0", -400, 20, globalFont, scale, "#ffffff"
         },
         {
@@ -77,16 +69,10 @@ function displayrules(m)
             ": Pause Menu", -235, 55, globalFont, scale, color
         },
         {
-            ": Main Helper", -270, 90, globalFont, scale, color
-        },
-        {
-            "Erik", -400, 90, globalFont, scale, "#555555"
-        },
-        {
             "- Play Tester -", -300, 175, globalFont, scale, "#ffff00"
         },
         {
-            "Cent", -300, 210, globalFont, scale, "#ff3278"
+            "Cent24", -300, 210, globalFont, scale, "#ff3278"
         },
         {
             "JCM-Corlg!", -300, 250, globalFont, scale, "#51d1f6"
@@ -110,61 +96,56 @@ function displayrules(m)
 	        "Version", 275, -150,  globalFont, 0.6, color
         },
         {
-            "Pre-Release ", 275, -110,  globalFont, 0.6, color
+            "1 3 1", 275, -60,  globalFont, 1, color
         },
         {
-            "1 3", 275, -45,  globalFont, 1, color
-        },
-        {
-		    ".", 280, -45,  globalFont, 1, color
+		    ". .", 280, -60,  globalFont, 1, color
         },
         {
             "OK", 0, 360, globalFont, 1.5, "#ffffff"
         },
     }
 
-
-if not switched then 
+if not switched then
         animTimer = 0 
         return 
     end
 
-    -- Actualizar timer de animación
-    if animTimer < animDuration then
+    if animTimer < 120 then 
         animTimer = animTimer + 1
     end
-    
-    local t = animTimer / animDuration
-    local bounceScale = easeOutBack(t) -- Factor que va de 0 a ~1.05 y baja a 1
+
+    local progress = clampf(animTimer / 60, 0.001, 1)
+    local slide_y = (128 / -progress) + 128
+
+    local bounce_y = 0
+    if animTimer >= 60 then
+        local t_bounce = (animTimer - 60) / 20 
+        bounce_y = 15 * math.exp(-4 * t_bounce) * math.sin(12 * t_bounce)
+    end
+
+    local global_y_modifier = slide_y + bounce_y
 
     m = gMarioStates[0]
     if (hasConfirmed == false) then
         set_mario_action(m, ACT_READING_AUTOMATIC_DIALOG, 0)
     end
 
-    -- Dibujar fondo con el tamaño animado
-    renderRect(0, 0, FONT_MENU, 1000 * bounceScale, 800 * bounceScale, "#000000")
+    renderRect(0, -global_y_modifier, FONT_MENU, 1000, 800, "#000000")
 
-    -- Dibujar textos (solo cuando el panel ya tiene un tamaño visible)
-    if t > 0.3 then
+    if animTimer > 1 then
         for _, v in ipairs(texts) do
-            -- Los textos también se desplazan y escalan con el rebote
-            printColorText(v[1], v[2] * bounceScale, v[3] * bounceScale, v[4], v[5] * bounceScale, v[6])
+            printColorText(v[1], v[2], v[3] - global_y_modifier, v[4], v[5], v[6])
         end
     end
 
-    -- Lógica de cierre (Botón OK)
-    local xd = returnX("OK", 1.5 * bounceScale, globalFont)
-    local yd = returnY("OK", 1.5 * bounceScale, globalFont) + (360 * bounceScale)
+    local xd = returnX("OK", 1.5, globalFont)
+    local yd = returnY("OK", 1.5, globalFont) + (360 - global_y_modifier)
     local mousex, mousey = djui_hud_get_mouse_x(), djui_hud_get_mouse_y()
     local dist = math.sqrt(((xd - mousex) ^ 2) + (((yd + 40) - mousey) ^ 2))
-
-    if (CLOSE_ON_MOUSE_HOVER and dist < 40) or (m.controller.buttonPressed & A_BUTTON ~= 0) then
-        switched = false
-        play_sound(SOUND_MENU_CLICK_FILE_SELECT, m.marioObj.header.gfx.cameraToObject)
-        if not hasConfirmed then
-            set_mario_action(m, ACT_IDLE, 0)
-            hasConfirmed = true
+    if animTimer > 60 then
+        if (CLOSE_ON_MOUSE_HOVER and dist < 40) or (m.controller.buttonPressed & A_BUTTON ~= 0) then
+            cerrarPanel(m)
         end
     end
 end
@@ -237,26 +218,23 @@ function renderRect(x, y, font, w, h, color)
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 
-    -- Cálculos de posición central
     local xd = x + (screenWidth / 2)
     local yd = y + (screenHeight / 2)
-    local xe = x + (w / 2)
-    local ye = y + (h / 2)
-    local fx = xd - xe
-    local fy = yd - ye
+    local fx = xd - (w / 2)
+    local fy = yd - (h / 2)
 
     local cornerSize = 16
     djui_hud_set_color(rgbtable.r, rgbtable.g, rgbtable.b, 170)
 
-    djui_hud_render_rect(fx + cornerSize, fy, w - (cornerSize * 2), h) -- Rectángulo horizontal
-    djui_hud_render_rect(fx, fy + cornerSize, cornerSize, h - (cornerSize * 2)) -- Lado izquierdo
-    djui_hud_render_rect(fx + w - cornerSize, fy + cornerSize, cornerSize, h - (cornerSize * 2)) -- Lado derecho
+    djui_hud_render_rect(fx + cornerSize, fy, w - (cornerSize * 2), h)
+    djui_hud_render_rect(fx, fy + cornerSize, cornerSize, h - (cornerSize * 2))
+    djui_hud_render_rect(fx + w - cornerSize, fy + cornerSize, cornerSize, h - (cornerSize * 2))
 
-    -- 2. Dibujar las 4 esquinas redondeadas usando las texturas cargadas
-    djui_hud_render_texture(TEX_ROUNDED_CORNER1, fx, fy, cornerSize / 16, cornerSize / 16) -- Top Left
-    djui_hud_render_texture(TEX_ROUNDED_CORNER2, fx + w - cornerSize, fy, cornerSize / 16, cornerSize / 16) -- Top Right
-    djui_hud_render_texture(TEX_ROUNDED_CORNER3, fx, fy + h - cornerSize, cornerSize / 16, cornerSize / 16) -- Bottom Left
-    djui_hud_render_texture(TEX_ROUNDED_CORNER4, fx + w - cornerSize, fy + h - cornerSize, cornerSize / 16, cornerSize / 16) -- Bottom Right
+    -- Esquinas
+    djui_hud_render_texture(TEX_ROUNDED_CORNER1, fx, fy, cornerSize / 16, cornerSize / 16)
+    djui_hud_render_texture(TEX_ROUNDED_CORNER2, fx + w - cornerSize, fy, cornerSize / 16, cornerSize / 16)
+    djui_hud_render_texture(TEX_ROUNDED_CORNER3, fx, fy + h - cornerSize, cornerSize / 16, cornerSize / 16)
+    djui_hud_render_texture(TEX_ROUNDED_CORNER4, fx + w - cornerSize, fy + h - cornerSize, cornerSize / 16, cornerSize / 16)
 end
 
 function displayrules2()
@@ -264,7 +242,6 @@ function displayrules2()
         djui_chat_message_create("Panel is already open.")
         return true
     end
-    -- Resetear variables de animación
     animTimer = 0
     panelScale = 0
     switched = true

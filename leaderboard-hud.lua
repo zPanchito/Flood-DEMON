@@ -1,4 +1,4 @@
-ocal function hud_render()
+local function hud_render()
     if not eFloodVariables.hudHide then
         if gGlobalSyncTable.roundState ~= ROUND_STATE_ACTIVE
         and gGlobalSyncTable.roundState ~= ROUND_STATE_END then return end
