@@ -14,6 +14,7 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 
 * SuperRodrigo0: Lobby Map
 * Blocky.cmd: Pause Menu
+* Kakaroto: Mod Trailer
 
 ## Testers
 
