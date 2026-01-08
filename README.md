@@ -16,9 +16,14 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 * Blocky.cmd: Pause Menu
 * Kakaroto: Mod Trailer and logo
 
+## Thanks for the ideas
+
+* Toño: Recommendations for tips and music
+* Son Goku: New Modifiers, Mode and Optimization Recommendations
+
 ## Testers
 
-* JCM-Corlg
+* JCM-Corlg! <img width="64" height="64" alt="jcm" src="https://github.com/user-attachments/assets/50ea1374-8879-4857-8156-45e4beb1f504" />
 * Goku
 * Cent24
 * CalebSM64_CR!
@@ -32,3 +37,8 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 * `Coop Settings`
 * `Flood Menu`
 * `Menu CS`
+
+## Family
+
+* Erik
+* JCM-Corlg!
