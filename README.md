@@ -5,14 +5,15 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 
 ## Credits
 
-* zPancho!: Flood DEMON
+* zPancho!: Flood DEMON <img width="32" height="32" alt="pancho" src="https://github.com/user-attachments/assets/0c57498a-10b0-4deb-8725-067b166371cc" />
+
 * DT Ryan: Flood Nightmare
 * birdekek: Flood Expanded
 * Agent X: Flood
 
 ## Thanks
 
-* SuperRodrigo0: Lobby Map
+* SuperRodrigo0: Modify the ZeroLife map <img width="32" height="32" alt="rodrigo" src="https://github.com/user-attachments/assets/fc646311-83f2-43a1-92c8-2a1d3299a9a5" />
 * Blocky.cmd: Pause Menu
 * Kakaroto: Mod Trailer and logo
 
@@ -23,10 +24,11 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 
 ## Testers
 
-* JCM-Corlg! <img width="64" height="64" alt="jcm" src="https://github.com/user-attachments/assets/50ea1374-8879-4857-8156-45e4beb1f504" />
+* JCM-Corlg! <img width="32" height="32" alt="jcm" src="https://github.com/user-attachments/assets/50ea1374-8879-4857-8156-45e4beb1f504" />
 * Goku
 * Cent24
-* CalebSM64_CR!
+* CalebSM64_CR! <img width="32" height="32" alt="caleb" src="https://github.com/user-attachments/assets/eda92e1e-9a3c-4468-bd8f-d9992a5b45a7" />
+
 
 ## Pause Menu
 
