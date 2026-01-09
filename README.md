@@ -19,7 +19,7 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 
 ## Thanks for the ideas
 
-* Toño: Recommendations for tips and music
+* Toño: Recommendations for tips and music <img width="32" height="632" alt="tono" src="https://github.com/user-attachments/assets/1dd482ad-00fa-487a-8e67-9bb62d844d37" />
 * Son Goku: New Modifiers, Mode and Optimization Recommendations
 
 ## Testers
