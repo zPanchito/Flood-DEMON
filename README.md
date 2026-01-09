@@ -29,13 +29,15 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 * Cent24
 * CalebSM64_CR! <img width="32" height="32" alt="caleb" src="https://github.com/user-attachments/assets/eda92e1e-9a3c-4468-bd8f-d9992a5b45a7" />
 
-## Pause Menu
+## Commands
 
+### Players
 * `/hide`
 * `/spectator`
 * `/menu`
 * `/info`
 
+### Moderator or Owner
 * `/start`
 * `/speed `
 * `/modifiers`
