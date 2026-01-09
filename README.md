@@ -27,7 +27,7 @@ This flood mod uses code from Flood Extreme and a little bit from Flood - (pleas
 * JCM-Corlg! <img width="32" height="32" alt="jcm" src="https://github.com/user-attachments/assets/50ea1374-8879-4857-8156-45e4beb1f504" />
 * Goku
 * Cent24
-* CalebSM64_CR! <img width="32" height="32" alt="caleb" src="https://github.com/user-attachments/assets/eda92e1e-9a3c-4468-bd8f-d9992a5b45a7" />
+* CalebSM64_CR! <img width="32" height="30" alt="caleb" src="https://github.com/user-attachments/assets/eda92e1e-9a3c-4468-bd8f-d9992a5b45a7" />
 
 ## Commands
 
